@@ -1,0 +1,127 @@
+{
+    parserClass="com.otl.sdk.language.OtlParser"
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix="Otl"
+    psiImplClassSuffix="Impl"
+    psiPackage="com.otl.sdk.language.psi"
+    psiImplPackage="com.otl.sdk.language.impl"
+
+    elementTypeHolderClass="com.otl.sdk.language.OtlTypes"
+    elementTypeClass="com.otl.sdk.language.psi.OtlElementType"
+    tokenTypeClass="com.otl.sdk.language.psi.OtlTokenType"
+
+    tokens=[
+        WHITE_SPACE='regexp:\s+'
+
+        REMARK='#'
+
+        SET_S='('
+        SET_E=')'
+        LIST_S='['
+        LIST_E=']'
+        MAP_S='{'
+        MAP_E='}'
+
+        ACCESS='~'
+        VAR_TOKEN=':'
+
+        TRUE='ㅇㅇ'
+        FALSE='ㄴㄴ'
+        NOT='ㅇㄴ'
+
+        GT='ㅇ>ㅇ'
+        LT='ㅇ<ㅇ'
+        EQ='ㅇ=ㅇ'
+        NQ='ㅇ!ㅇ'
+        GE='ㅇ>=ㅇ'
+        LE='ㅇ<=ㅇ'
+
+        ADD='ㅇ+ㅇ'
+        SUB='ㅇ-ㅇ'
+        MUL='ㅇ*ㅇ'
+        DIV='ㅇ/ㅇ'
+        REM='ㅇ%ㅇ'
+
+        IF='?ㅅ?'
+
+        PUT_TOKEN='<='
+        REPLACE_TOKEN='=>'
+
+        INT="regexp:[-+]?\d{1,10}"
+        LONG="regexp:[-+]?\d{1,19}"
+        FLOAT="regexp:[-+]?(\d+\.\d{1,7})"
+        DOUBLE="regexp:[-+]?(\d+\.\d{1,16})"
+        BOOL="regexp:ㅇㅇ|ㄴㄴ"
+        STRING="regexp:\"[^]]*\""
+        CHAR="regexp:'.'"
+
+        PARAM_S='['
+        PARAM_E=']'
+        LOOP_S="{"
+        LOOP_E="}"
+
+        KLASS_IDENTIFIER="regexp:[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*"
+        METHOD_IDENTIFIER="regexp:[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*"
+        VARIABLE_IDENTIFIER="regexp:[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*"
+    ]
+
+//    psiImplUtilClass="com.otl.sdk.language.items.OtlElement"
+//    psiImplUtilClass="com.otl.sdk.language.items.OtlElementDefineMethod"
+
+    psiImplUtilClass="com.otl.sdk.language.util.OtlDefineKlassUtil"
+
+    implements("KLASS_NAME")="OtlDefineKlass"
+    mixin("KLASS_NAME")="OtlDefineKlassImpl"
+
+//    implements="com.otl.sdk.language.psi.OtlCompositeElement"
+//    extends="com.otl.sdk.language.psi.OtlCompositeElementImpl"
+//    implements("KLASS|METHOD|VARIABLE")="com.otl.sdk.language.psi.OtlCompositeElement"
+//    mixin("KLASS|METHOD|VARIABLE")="com.otl.sdk.language.psi.OtlCompositeElementImpl"
+}
+
+OtlFile ::= (REMARK_TOKEN | LINES | DEFINE_METHOD | DEFINE_KLASS)*
+
+private LINES ::= IMPORT | UPDATE_VARIABLE | CREATE_VARIABLE
+
+REMARK_TOKEN ::= '#' "regexp:[^\n\r]*"
+CREATE_VARIABLE ::= KLASS_NAME ('[' INT ']')? VARIABLE_NAME ':' value
+// 변수명:변경할 값
+UPDATE_VARIABLE ::= USE_VARIABLE ':' value { pin=3 }
+DEFINE_METHOD ::= ㅁㅅㅁ METHOD_NAME DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)? { pin=1 }
+DEFINE_KLASS ::= ㅋㅅㅋ KLASS_NAME DEFINE_PARAMS '{' (LINES | DEFINE_METHOD)* '}' {
+    pin=1
+    methods=[getKey getName getNameIdentifier getPresentation]
+}
+IMPORT ::= ㅇㅍㅇ STRING_VALUE { pin=1 }
+
+DEFINE_PARAMS ::= '[]' | ('[' KLASS_NAME VARIABLE_NAME ']')+
+
+private param ::= ('[' value ']')+ | value
+private value ::= USE_VARIABLE | USE_METHOD | INT | LONG | FLOAT | DOUBLE | BOOL | STRING | CHAR
+
+private INT ::= INT_VALUE (('ㅇ+ㅇ' | 'ㅇ-ㅇ' | 'ㅇ%ㅇ' | 'ㅇ*ㅇ' | 'ㅇ/ㅇ') INT_VALUE)*
+private LONG ::= LONG_VALUE (('ㅇ+ㅇ' | 'ㅇ-ㅇ' | 'ㅇ%ㅇ' | 'ㅇ*ㅇ' | 'ㅇ/ㅇ') LONG_VALUE)*
+private FLOAT ::= FLOAT_VALUE (('ㅇ+ㅇ' | 'ㅇ-ㅇ' | 'ㅇ%ㅇ' | 'ㅇ*ㅇ' | 'ㅇ/ㅇ') FLOAT_VALUE)*
+private DOUBLE ::= DOUBLE_VALUE (('ㅇ+ㅇ' | 'ㅇ-ㅇ' | 'ㅇ%ㅇ' | 'ㅇ*ㅇ' | 'ㅇ/ㅇ') DOUBLE_VALUE)*
+private BOOL ::= BOOL_VALUE ( ('ㄸ' | 'ㄲ') BOOL_VALUE)*
+private STRING ::= STRING_VALUE
+private CHAR ::= CHAR_VALUE
+
+private INT_VALUE ::= "regexp:[-+]?\d{1,10}" | USE_VARIABLE | USE_METHOD
+private LONG_VALUE ::= "regexp:[-+]?\d{1,19}" | INT_VALUE | USE_VARIABLE | USE_METHOD
+private FLOAT_VALUE ::= "regexp:[-+]?(\d+\.\d{1,7})" | LONG_VALUE | USE_VARIABLE | USE_METHOD
+private DOUBLE_VALUE ::= "regexp:[-+]?(\d+\.\d{1,16})" | FLOAT_VALUE | USE_VARIABLE | USE_METHOD
+private BOOL_VALUE ::= "regexp:ㅇㅇ|ㄴㄴ" | USE_VARIABLE | USE_METHOD | (NUMBERS ('ㅇ>ㅇ' | 'ㅇ<ㅇ' | 'ㅇ=ㅇ' | 'ㅇ!ㅇ' | 'ㅇ<=ㅇ' | 'ㅇ>=ㅇ') NUMBERS)
+private STRING_VALUE ::= "regexp:\"[^]]*\"" | USE_VARIABLE | USE_METHOD
+private CHAR_VALUE ::= "regexp:'.'" | USE_VARIABLE | USE_METHOD
+
+private NUMBERS ::= INT | LONG | FLOAT | DOUBLE
+
+private USE_METHOD ::= (USE_VARIABLE | METHOD_ITEM | KLASS_NAME) ('~' METHOD_ITEM)*
+private USE_VARIABLE ::= ':'? '~'* VARIABLE_NAME
+private METHOD_ITEM ::= METHOD_NAME param? // 메소드명[값1][값2]
+
+VARIABLE_NAME ::= VARIABLE_IDENTIFIER
+METHOD_NAME ::= METHOD_IDENTIFIER
+KLASS_NAME ::= KLASS_IDENTIFIER
