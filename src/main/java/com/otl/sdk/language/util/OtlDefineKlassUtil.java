@@ -1,50 +1,56 @@
 package com.otl.sdk.language.util;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.otl.sdk.language.OtlTypes;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.otl.sdk.language.OtlFileType;
 import com.otl.sdk.language.psi.OtlDefineKlass;
-import org.jetbrains.annotations.Nullable;
+import com.otl.sdk.language.psi.OtlFile;
 
-import javax.swing.*;
+import java.util.*;
 
 public class OtlDefineKlassUtil {
-    public static String getKey(OtlDefineKlass item) {
-        ASTNode node = item.getNode().findChildByType(OtlTypes.KLASS_NAME);
-        return node != null ? node.getText() : null;
+    public static List<OtlDefineKlass> findDefineKlass(Project project, String key) {
+        List<OtlDefineKlass> result = new ArrayList<>();
+        Collection<VirtualFile> virtualFiles =
+                FileTypeIndex.getFiles(OtlFileType.INSTANCE, GlobalSearchScope.allScope(project));
+        for (VirtualFile virtualFile : virtualFiles) {
+            if (PsiManager.getInstance(project).findFile(virtualFile) instanceof OtlFile otlFile) {
+                OtlDefineKlass[] items = PsiTreeUtil.getChildrenOfType(otlFile, OtlDefineKlass.class);
+                if (items != null) {
+                    for (OtlDefineKlass item : items) {
+                        if (key.equals(item.getKey())) result.add(item);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
-    public static String getName(OtlDefineKlass item) {
-        return getKey(item);
+    public static List<OtlDefineKlass> findDefineKlass(Project project) {
+        List<OtlDefineKlass> result = new ArrayList<>();
+        Collection<VirtualFile> virtualFiles =
+                FileTypeIndex.getFiles(OtlFileType.INSTANCE, GlobalSearchScope.allScope(project));
+        for (VirtualFile virtualFile : virtualFiles) {
+            if (PsiManager.getInstance(project).findFile(virtualFile) instanceof OtlFile otlFile) {
+                OtlDefineKlass[] items = PsiTreeUtil.getChildrenOfType(otlFile, OtlDefineKlass.class);
+                if (items != null) Collections.addAll(result, items);
+            }
+        }
+        return result;
     }
 
-    public static PsiElement getNameIdentifier(OtlDefineKlass item) {
-        ASTNode node = item.getNode().findChildByType(OtlTypes.KLASS_NAME);
-        return node != null ? node.getPsi() : null;
-    }
-
-    public static ItemPresentation getPresentation(OtlDefineKlass item) {
-        return new ItemPresentation() {
-            @Nullable
-            @Override
-            public String getPresentableText() {
-                return item.getText();
+    public static boolean isDefineKlass(Project project, String type) {
+        for (VirtualFile vf : FileTypeIndex.getFiles(OtlFileType.INSTANCE, GlobalSearchScope.allScope(project))) {
+            OtlDefineKlass[] ks;
+            if (PsiManager.getInstance(project).findFile(vf) instanceof OtlFile otlFile
+                    && (ks = PsiTreeUtil.getChildrenOfType(otlFile, OtlDefineKlass.class)) != null) {
+                for (OtlDefineKlass k : ks) if (type.equals(k.getKey())) return true;
             }
-
-            @Nullable
-            @Override
-            public String getLocationString() {
-                PsiFile psiFile = item.getContainingFile();
-                return psiFile == null ? null : psiFile.getName();
-            }
-
-            @Nullable
-            @Override
-            public Icon getIcon(boolean unused) {
-                return item.getIcon(0);
-            }
-        };
+        }
+        return false;
     }
 }

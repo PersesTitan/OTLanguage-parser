@@ -23,6 +23,9 @@ public interface OtlDefineMethod extends PsiElement {
   List<OtlMethodName> getMethodNameList();
 
   @NotNull
+  List<OtlRemarkToken> getRemarkTokenList();
+
+  @NotNull
   List<OtlUpdateVariable> getUpdateVariableList();
 
   @NotNull

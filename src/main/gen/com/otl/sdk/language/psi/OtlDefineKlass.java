@@ -20,8 +20,8 @@ public interface OtlDefineKlass extends PsiElement {
   @NotNull
   List<OtlImport> getImportList();
 
-  @Nullable
-  OtlKlassName getKlassName();
+  @NotNull
+  List<OtlRemarkToken> getRemarkTokenList();
 
   @NotNull
   List<OtlUpdateVariable> getUpdateVariableList();
@@ -29,6 +29,8 @@ public interface OtlDefineKlass extends PsiElement {
   String getKey();
 
   String getName();
+
+  PsiElement setName(String newName);
 
   PsiElement getNameIdentifier();
 

@@ -33,14 +33,17 @@ public interface OtlTypes {
   IElementType GE = new OtlTokenType("ㅇ>=ㅇ");
   IElementType GT = new OtlTokenType("ㅇ>ㅇ");
   IElementType IF = new OtlTokenType("?ㅅ?");
+  IElementType IMPORT_KEY = new OtlTokenType("IMPORT_KEY");
   IElementType INT = new OtlTokenType("INT");
   IElementType KLASS_IDENTIFIER = new OtlTokenType("KLASS_IDENTIFIER");
+  IElementType KLASS_KEY = new OtlTokenType("KLASS_KEY");
   IElementType LE = new OtlTokenType("ㅇ<=ㅇ");
   IElementType LONG = new OtlTokenType("LONG");
   IElementType LOOP_E = new OtlTokenType("}");
   IElementType LOOP_S = new OtlTokenType("{");
   IElementType LT = new OtlTokenType("ㅇ<ㅇ");
   IElementType METHOD_IDENTIFIER = new OtlTokenType("METHOD_IDENTIFIER");
+  IElementType METHOD_KEY = new OtlTokenType("METHOD_KEY");
   IElementType MUL = new OtlTokenType("ㅇ*ㅇ");
   IElementType NOT = new OtlTokenType("ㅇㄴ");
   IElementType NQ = new OtlTokenType("ㅇ!ㅇ");
@@ -58,6 +61,7 @@ public interface OtlTypes {
   IElementType VARIABLE_IDENTIFIER = new OtlTokenType("VARIABLE_IDENTIFIER");
   IElementType VAR_TOKEN = new OtlTokenType(":");
   IElementType ㅁㅅㅁ = new OtlTokenType("ㅁㅅㅁ");
+  IElementType ㅁㅆㅁ = new OtlTokenType("ㅁㅆㅁ");
   IElementType ㅇㅍㅇ = new OtlTokenType("ㅇㅍㅇ");
   IElementType ㅋㅅㅋ = new OtlTokenType("ㅋㅅㅋ");
 

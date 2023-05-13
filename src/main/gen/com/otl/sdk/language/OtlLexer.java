@@ -19,9 +19,16 @@ class OtlLexer implements FlexLexer {
 
   /** lexical states */
   public static final int YYINITIAL = 0;
-  public static final int WAITING_VALUE = 2;
-  public static final int DEFINE_KLASS = 4;
-  public static final int DEFINE_PARAMS = 6;
+  public static final int IMPORT = 2;
+  public static final int CREATE_VARIABLE = 4;
+  public static final int DEFINE_KLASS = 6;
+  public static final int IS_KLASS = 8;
+  public static final int IS_NAME_KLASS = 10;
+  public static final int KLASS_PARAMS = 12;
+  public static final int DEFINE_METHOD = 14;
+  public static final int IS_METHOD = 16;
+  public static final int IS_NAME_METHOD = 18;
+  public static final int METHOD_PARAMS = 20;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -30,7 +37,8 @@ class OtlLexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = {
-     0,  0,  1,  1,  2,  2,  1, 1
+     0,  0,  1,  1,  2,  2,  3,  3,  4,  4,  5,  5,  2,  2,  6,  6, 
+     7,  7,  8,  8,  2, 2
   };
 
   /**
@@ -70,8 +78,8 @@ class OtlLexer implements FlexLexer {
     "\11\0\1\1\1\2\1\0\1\1\1\2\22\0\1\1"+
     "\2\0\1\3\11\0\1\4\2\0\12\4\7\0\32\5"+
     "\1\6\1\0\1\7\1\0\1\4\1\0\32\5\1\10"+
-    "\u01b5\0\24\5\1\11\5\5\1\12\30\5\234\0\u019e\5"+
-    "\142\0";
+    "\u01b5\0\20\5\1\11\3\5\1\12\1\5\1\13\3\5"+
+    "\1\14\1\5\1\15\26\5\234\0\u019e\5\142\0";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[1280];
@@ -98,11 +106,13 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\2\0\1\1\2\2\1\3\1\4\2\2\1\1\1\5"+
-    "\1\6\1\7\1\10\1\0\1\3\2\0\1\11";
+    "\11\0\2\1\1\2\1\3\3\1\1\4\1\5\1\1"+
+    "\1\6\1\5\1\6\1\7\1\10\1\11\1\12\1\13"+
+    "\1\14\1\15\1\16\1\17\1\20\1\21\1\0\1\2"+
+    "\4\0\1\22\1\23\1\24";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[19];
+    int [] result = new int[42];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -127,12 +137,15 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\13\0\26\0\41\0\54\0\67\0\102\0\115"+
-    "\0\130\0\143\0\156\0\41\0\41\0\41\0\54\0\171"+
-    "\0\204\0\130\0\41";
+    "\0\0\0\16\0\34\0\52\0\70\0\106\0\124\0\142"+
+    "\0\160\0\176\0\214\0\232\0\250\0\266\0\304\0\322"+
+    "\0\340\0\16\0\356\0\176\0\374\0\232\0\u010a\0\176"+
+    "\0\176\0\u0118\0\u0126\0\176\0\u0134\0\u0142\0\176\0\u0150"+
+    "\0\176\0\214\0\u015e\0\u016c\0\u017a\0\u0188\0\356\0\176"+
+    "\0\176\0\176";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[19];
+    int [] result = new int[42];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -155,15 +168,26 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\4\1\5\1\6\1\7\6\4\1\10\1\4\1\11"+
-    "\1\6\11\4\1\12\1\6\2\4\1\13\1\14\1\15"+
-    "\1\16\2\13\14\0\1\17\1\6\1\7\10\0\1\20"+
-    "\1\6\10\0\2\7\1\0\10\7\11\0\1\21\2\0"+
-    "\1\22\1\6\11\0\1\12\1\6\14\0\2\13\3\0"+
-    "\2\13\1\0\1\20\23\0\1\23";
+    "\1\12\1\13\1\14\1\15\5\12\1\16\1\12\1\17"+
+    "\1\20\1\12\1\21\1\22\1\14\13\21\1\12\1\23"+
+    "\1\14\13\12\1\24\1\25\1\26\2\24\1\27\1\30"+
+    "\1\24\1\31\5\27\1\12\1\32\1\14\2\12\1\33"+
+    "\1\12\1\34\1\12\5\33\1\12\1\23\1\14\2\12"+
+    "\1\35\1\12\1\34\1\12\5\35\1\24\1\25\1\26"+
+    "\2\24\1\36\1\37\1\24\1\31\5\36\1\12\1\40"+
+    "\1\14\2\12\1\33\1\12\1\41\1\12\5\33\1\12"+
+    "\1\23\1\14\2\12\1\35\1\12\1\41\1\12\5\35"+
+    "\17\0\1\42\1\14\1\15\13\0\1\43\1\14\13\0"+
+    "\2\15\1\0\13\15\12\0\1\44\20\0\1\45\12\0"+
+    "\1\46\3\0\2\21\1\0\13\21\1\0\1\47\1\14"+
+    "\14\0\1\25\1\14\17\0\2\27\3\0\5\27\1\0"+
+    "\1\32\1\14\17\0\2\33\3\0\5\33\4\0\2\35"+
+    "\3\0\5\35\4\0\2\36\3\0\5\36\1\0\1\40"+
+    "\1\14\14\0\1\43\25\0\1\50\17\0\1\51\16\0"+
+    "\1\52\1\0";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[143];
+    int [] result = new int[406];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -201,11 +225,11 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\2\0\1\1\1\11\7\1\3\11\1\0\1\1\2\0"+
-    "\1\11";
+    "\11\0\1\11\11\1\1\11\3\1\2\11\2\1\1\11"+
+    "\2\1\1\11\1\1\1\11\1\0\1\1\4\0\3\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[19];
+    int [] result = new int[42];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -579,50 +603,105 @@ class OtlLexer implements FlexLexer {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { return TokenType.WHITE_SPACE;
-            }
-          // fall through
-          case 10: break;
-          case 2:
             { return TokenType.BAD_CHARACTER;
             }
           // fall through
-          case 11: break;
-          case 3:
+          case 21: break;
+          case 2:
             { yybegin(YYINITIAL); return TokenType.WHITE_SPACE;
             }
           // fall through
-          case 12: break;
-          case 4:
+          case 22: break;
+          case 3:
             { yybegin(YYINITIAL); return OtlTypes.REMARK;
             }
           // fall through
-          case 13: break;
+          case 23: break;
+          case 4:
+            { yybegin(YYINITIAL); return OtlTypes.IMPORT_KEY;
+            }
+          // fall through
+          case 24: break;
           case 5:
-            { return OtlTypes.KLASS_IDENTIFIER;
+            { return TokenType.WHITE_SPACE;
             }
           // fall through
-          case 14: break;
+          case 25: break;
           case 6:
-            { return OtlTypes.PARAM_S;
+            { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER;
             }
           // fall through
-          case 15: break;
+          case 26: break;
           case 7:
-            { return OtlTypes.PARAM_E;
+            { return OtlTypes.KLASS_KEY;
             }
           // fall through
-          case 16: break;
+          case 27: break;
           case 8:
+            { yybegin(IS_KLASS); return OtlTypes.PARAM_S;
+            }
+          // fall through
+          case 28: break;
+          case 9:
             { yybegin(YYINITIAL); return OtlTypes.LOOP_S;
             }
           // fall through
-          case 17: break;
-          case 9:
+          case 29: break;
+          case 10:
+            { yybegin(IS_NAME_KLASS); return TokenType.WHITE_SPACE;
+            }
+          // fall through
+          case 30: break;
+          case 11:
+            { return OtlTypes.KLASS_IDENTIFIER;
+            }
+          // fall through
+          case 31: break;
+          case 12:
+            { yybegin(DEFINE_KLASS); return OtlTypes.PARAM_E;
+            }
+          // fall through
+          case 32: break;
+          case 13:
+            { return OtlTypes.VARIABLE_IDENTIFIER;
+            }
+          // fall through
+          case 33: break;
+          case 14:
+            { return OtlTypes.METHOD_KEY;
+            }
+          // fall through
+          case 34: break;
+          case 15:
+            { yybegin(IS_METHOD); return OtlTypes.PARAM_S;
+            }
+          // fall through
+          case 35: break;
+          case 16:
+            { yybegin(IS_NAME_METHOD); return TokenType.WHITE_SPACE;
+            }
+          // fall through
+          case 36: break;
+          case 17:
+            { yybegin(DEFINE_METHOD); return OtlTypes.PARAM_E;
+            }
+          // fall through
+          case 37: break;
+          case 18:
+            { yybegin(DEFINE_METHOD); return OtlTypes.ㅁㅅㅁ;
+            }
+          // fall through
+          case 38: break;
+          case 19:
+            { yybegin(IMPORT); return OtlTypes.ㅇㅍㅇ;
+            }
+          // fall through
+          case 39: break;
+          case 20:
             { yybegin(DEFINE_KLASS); return OtlTypes.ㅋㅅㅋ;
             }
           // fall through
-          case 18: break;
+          case 40: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.otl.sdk.language.OtlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.otl.sdk.language.psi.*;
-import com.otl.sdk.language.util.OtlDefineKlassUtil;
+import com.otl.sdk.language.util.utils.OtlPsiUtil;
 import com.intellij.navigation.ItemPresentation;
 
 public class OtlDefineKlassImpl extends ASTWrapperPsiElement implements OtlDefineKlass {
@@ -54,9 +54,9 @@ public class OtlDefineKlassImpl extends ASTWrapperPsiElement implements OtlDefin
   }
 
   @Override
-  @Nullable
-  public OtlKlassName getKlassName() {
-    return findChildByClass(OtlKlassName.class);
+  @NotNull
+  public List<OtlRemarkToken> getRemarkTokenList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlRemarkToken.class);
   }
 
   @Override
@@ -67,22 +67,27 @@ public class OtlDefineKlassImpl extends ASTWrapperPsiElement implements OtlDefin
 
   @Override
   public String getKey() {
-    return OtlDefineKlassUtil.getKey(this);
+    return OtlPsiUtil.getKey(this);
   }
 
   @Override
   public String getName() {
-    return OtlDefineKlassUtil.getName(this);
+    return OtlPsiUtil.getName(this);
+  }
+
+  @Override
+  public PsiElement setName(String newName) {
+    return OtlPsiUtil.setName(this, newName);
   }
 
   @Override
   public PsiElement getNameIdentifier() {
-    return OtlDefineKlassUtil.getNameIdentifier(this);
+    return OtlPsiUtil.getNameIdentifier(this);
   }
 
   @Override
   public ItemPresentation getPresentation() {
-    return OtlDefineKlassUtil.getPresentation(this);
+    return OtlPsiUtil.getPresentation(this);
   }
 
 }

@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.otl.sdk.language.OtlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.otl.sdk.language.psi.*;
-import com.otl.sdk.language.util.OtlDefineKlassUtil;
+import com.otl.sdk.language.util.utils.OtlPsiUtil;
 
 public class OtlDefineMethodImpl extends ASTWrapperPsiElement implements OtlDefineMethod {
 
@@ -56,6 +56,12 @@ public class OtlDefineMethodImpl extends ASTWrapperPsiElement implements OtlDefi
   @NotNull
   public List<OtlMethodName> getMethodNameList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlMethodName.class);
+  }
+
+  @Override
+  @NotNull
+  public List<OtlRemarkToken> getRemarkTokenList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlRemarkToken.class);
   }
 
   @Override

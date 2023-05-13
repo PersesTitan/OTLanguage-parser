@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.otl.sdk.language.OtlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.otl.sdk.language.psi.*;
-import com.otl.sdk.language.util.OtlDefineKlassUtil;
+import com.otl.sdk.language.util.utils.OtlPsiUtil;
 
 public class OtlCreateVariableImpl extends ASTWrapperPsiElement implements OtlCreateVariable {
 

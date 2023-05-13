@@ -12,8 +12,6 @@
     tokenTypeClass="com.otl.sdk.language.psi.OtlTokenType"
 
     tokens=[
-        WHITE_SPACE='regexp:\s+'
-
         REMARK='#'
 
         SET_S='('
@@ -64,36 +62,38 @@
         KLASS_IDENTIFIER="regexp:[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*"
         METHOD_IDENTIFIER="regexp:[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*"
         VARIABLE_IDENTIFIER="regexp:[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*"
+
+        WHITE_SPACE='regexp:\s+'
     ]
 
 //    psiImplUtilClass="com.otl.sdk.language.items.OtlElement"
 //    psiImplUtilClass="com.otl.sdk.language.items.OtlElementDefineMethod"
 
-    psiImplUtilClass="com.otl.sdk.language.util.OtlDefineKlassUtil"
-
-    implements("KLASS_NAME")="OtlDefineKlass"
-    mixin("KLASS_NAME")="OtlDefineKlassImpl"
+//    implements("KLASS_KEY")="OtlDefineKlass"
+//    mixin("KLASS_KEY")="OtlDefineKlassImpl"
 
 //    implements="com.otl.sdk.language.psi.OtlCompositeElement"
 //    extends="com.otl.sdk.language.psi.OtlCompositeElementImpl"
 //    implements("KLASS|METHOD|VARIABLE")="com.otl.sdk.language.psi.OtlCompositeElement"
 //    mixin("KLASS|METHOD|VARIABLE")="com.otl.sdk.language.psi.OtlCompositeElementImpl"
+
+    psiImplUtilClass="com.otl.sdk.language.util.utils.OtlPsiUtil"
 }
 
-OtlFile ::= (REMARK_TOKEN | LINES | DEFINE_METHOD | DEFINE_KLASS)*
+OtlFile ::= (LINES | DEFINE_METHOD | DEFINE_KLASS)*
 
-private LINES ::= IMPORT | UPDATE_VARIABLE | CREATE_VARIABLE
+private LINES ::= REMARK_TOKEN | IMPORT | UPDATE_VARIABLE | CREATE_VARIABLE
 
-REMARK_TOKEN ::= '#' "regexp:[^\n\r]*"
+REMARK_TOKEN ::= '#' "regexp:[^\n\r]*" { pin=1 }
 CREATE_VARIABLE ::= KLASS_NAME ('[' INT ']')? VARIABLE_NAME ':' value
 // 변수명:변경할 값
 UPDATE_VARIABLE ::= USE_VARIABLE ':' value { pin=3 }
-DEFINE_METHOD ::= ㅁㅅㅁ METHOD_NAME DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)? { pin=1 }
-DEFINE_KLASS ::= ㅋㅅㅋ KLASS_NAME DEFINE_PARAMS '{' (LINES | DEFINE_METHOD)* '}' {
+DEFINE_METHOD ::= ( ㅁㅅㅁ | ㅁㅆㅁ ) METHOD_KEY DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)? { pin=1 }
+DEFINE_KLASS ::= ㅋㅅㅋ KLASS_KEY DEFINE_PARAMS '{' (LINES | DEFINE_METHOD)* '}' {
     pin=1
-    methods=[getKey getName getNameIdentifier getPresentation]
+    methods=[getKey getName setName getNameIdentifier getPresentation]
 }
-IMPORT ::= ㅇㅍㅇ STRING_VALUE { pin=1 }
+IMPORT ::= ㅇㅍㅇ IMPORT_KEY { pin=1 }
 
 DEFINE_PARAMS ::= '[]' | ('[' KLASS_NAME VARIABLE_NAME ']')+
 
@@ -124,4 +124,6 @@ private METHOD_ITEM ::= METHOD_NAME param? // 메소드명[값1][값2]
 
 VARIABLE_NAME ::= VARIABLE_IDENTIFIER
 METHOD_NAME ::= METHOD_IDENTIFIER
-KLASS_NAME ::= KLASS_IDENTIFIER
+KLASS_NAME ::= KLASS_IDENTIFIER {
+    methods=[getKey getName setName getNameIdentifier getPresentation]
+}

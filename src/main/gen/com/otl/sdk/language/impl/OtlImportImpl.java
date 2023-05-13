@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.otl.sdk.language.OtlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.otl.sdk.language.psi.*;
-import com.otl.sdk.language.util.OtlDefineKlassUtil;
+import com.otl.sdk.language.util.utils.OtlPsiUtil;
 
 public class OtlImportImpl extends ASTWrapperPsiElement implements OtlImport {
 
@@ -26,24 +26,6 @@ public class OtlImportImpl extends ASTWrapperPsiElement implements OtlImport {
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof OtlVisitor) accept((OtlVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public List<OtlKlassName> getKlassNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlKlassName.class);
-  }
-
-  @Override
-  @NotNull
-  public List<OtlMethodName> getMethodNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlMethodName.class);
-  }
-
-  @Override
-  @Nullable
-  public OtlVariableName getVariableName() {
-    return findChildByClass(OtlVariableName.class);
   }
 
 }

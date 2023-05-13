@@ -1,7 +1,6 @@
 package com.otl.sdk.language.syntax;
 
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
@@ -46,10 +45,10 @@ public class OtlSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @Override
     public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
-        if (tokenType.equals(OtlTypes.REMARK)) return REMARK_KEYS;
-        else if (tokenType.equals(OtlTypes.ㅋㅅㅋ)) return KLASS_DEFINE_KEYS;
-        else if (tokenType.equals(OtlTypes.ㅁㅅㅁ)) return METHOD_DEFINE_KEYS;
-        else if (tokenType.equals(OtlTypes.METHOD_NAME)) return METHOD_NAME_KEYS;
-        else return EMPTY_KEYS;
+        return OtlSyntaxHighlighterItem.getKeys(tokenType);
+//        if (tokenType.equals(OtlTypes.REMARK)) return REMARK_KEYS;
+//        else if (tokenType.equals(OtlTypes.ㅋㅅㅋ)) return KLASS_DEFINE_KEYS;
+//        else if (tokenType.equals(OtlTypes.ㅁㅅㅁ)) return METHOD_DEFINE_KEYS;
+//        else return EMPTY_KEYS;
     }
 }

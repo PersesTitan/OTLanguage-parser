@@ -170,16 +170,15 @@ public class OtlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ㅋㅅㅋ KLASS_NAME DEFINE_PARAMS '{' (LINES | DEFINE_METHOD)* '}'
+  // ㅋㅅㅋ KLASS_KEY DEFINE_PARAMS '{' (LINES | DEFINE_METHOD)* '}'
   public static boolean DEFINE_KLASS(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DEFINE_KLASS")) return false;
     if (!nextTokenIs(b, ㅋㅅㅋ)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, DEFINE_KLASS, null);
-    r = consumeToken(b, ㅋㅅㅋ);
+    r = consumeTokens(b, 1, ㅋㅅㅋ, KLASS_KEY);
     p = r; // pin = 1
-    r = r && report_error_(b, KLASS_NAME(b, l + 1));
-    r = p && report_error_(b, DEFINE_PARAMS(b, l + 1)) && r;
+    r = r && report_error_(b, DEFINE_PARAMS(b, l + 1));
     r = p && report_error_(b, consumeToken(b, LOOP_S)) && r;
     r = p && report_error_(b, DEFINE_KLASS_4(b, l + 1)) && r;
     r = p && consumeToken(b, LOOP_E) && r;
@@ -208,15 +207,15 @@ public class OtlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ㅁㅅㅁ METHOD_NAME DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)?
+  // ( ㅁㅅㅁ | ㅁㅆㅁ ) METHOD_KEY DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)?
   public static boolean DEFINE_METHOD(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DEFINE_METHOD")) return false;
-    if (!nextTokenIs(b, ㅁㅅㅁ)) return false;
+    if (!nextTokenIs(b, "<define method>", ㅁㅅㅁ, ㅁㅆㅁ)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, DEFINE_METHOD, null);
-    r = consumeToken(b, ㅁㅅㅁ);
+    Marker m = enter_section_(b, l, _NONE_, DEFINE_METHOD, "<define method>");
+    r = DEFINE_METHOD_0(b, l + 1);
     p = r; // pin = 1
-    r = r && report_error_(b, METHOD_NAME(b, l + 1));
+    r = r && report_error_(b, consumeToken(b, METHOD_KEY));
     r = p && report_error_(b, DEFINE_PARAMS(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, LOOP_S)) && r;
     r = p && report_error_(b, DEFINE_METHOD_4(b, l + 1)) && r;
@@ -224,6 +223,15 @@ public class OtlParser implements PsiParser, LightPsiParser {
     r = p && DEFINE_METHOD_6(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
+  }
+
+  // ㅁㅅㅁ | ㅁㅆㅁ
+  private static boolean DEFINE_METHOD_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "DEFINE_METHOD_0")) return false;
+    boolean r;
+    r = consumeToken(b, ㅁㅅㅁ);
+    if (!r) r = consumeToken(b, ㅁㅆㅁ);
+    return r;
   }
 
   // LINES*
@@ -414,15 +422,14 @@ public class OtlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ㅇㅍㅇ STRING_VALUE
+  // ㅇㅍㅇ IMPORT_KEY
   public static boolean IMPORT(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IMPORT")) return false;
     if (!nextTokenIs(b, ㅇㅍㅇ)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, IMPORT, null);
-    r = consumeToken(b, ㅇㅍㅇ);
+    r = consumeTokens(b, 1, ㅇㅍㅇ, IMPORT_KEY);
     p = r; // pin = 1
-    r = r && STRING_VALUE(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -497,11 +504,12 @@ public class OtlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IMPORT | UPDATE_VARIABLE | CREATE_VARIABLE
+  // REMARK_TOKEN | IMPORT | UPDATE_VARIABLE | CREATE_VARIABLE
   static boolean LINES(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LINES")) return false;
     boolean r;
-    r = IMPORT(b, l + 1);
+    r = REMARK_TOKEN(b, l + 1);
+    if (!r) r = IMPORT(b, l + 1);
     if (!r) r = UPDATE_VARIABLE(b, l + 1);
     if (!r) r = CREATE_VARIABLE(b, l + 1);
     return r;
@@ -610,7 +618,7 @@ public class OtlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (REMARK_TOKEN | LINES | DEFINE_METHOD | DEFINE_KLASS)*
+  // (LINES | DEFINE_METHOD | DEFINE_KLASS)*
   static boolean OtlFile(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "OtlFile")) return false;
     while (true) {
@@ -621,12 +629,11 @@ public class OtlParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // REMARK_TOKEN | LINES | DEFINE_METHOD | DEFINE_KLASS
+  // LINES | DEFINE_METHOD | DEFINE_KLASS
   private static boolean OtlFile_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "OtlFile_0")) return false;
     boolean r;
-    r = REMARK_TOKEN(b, l + 1);
-    if (!r) r = LINES(b, l + 1);
+    r = LINES(b, l + 1);
     if (!r) r = DEFINE_METHOD(b, l + 1);
     if (!r) r = DEFINE_KLASS(b, l + 1);
     return r;
@@ -637,12 +644,13 @@ public class OtlParser implements PsiParser, LightPsiParser {
   public static boolean REMARK_TOKEN(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "REMARK_TOKEN")) return false;
     if (!nextTokenIs(b, REMARK)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, REMARK_TOKEN, null);
     r = consumeToken(b, REMARK);
+    p = r; // pin = 1
     r = r && consumeToken(b, "regexp:[^\n\r]*");
-    exit_section_(b, m, REMARK_TOKEN, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */

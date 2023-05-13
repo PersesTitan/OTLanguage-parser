@@ -1,4 +1,4 @@
-package com.otl.sdk.language.psi;
+package com.otl.sdk.language.element;
 
 import com.intellij.psi.PsiNameIdentifierOwner;
 

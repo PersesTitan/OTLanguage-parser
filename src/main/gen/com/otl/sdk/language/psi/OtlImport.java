@@ -7,13 +7,4 @@ import com.intellij.psi.PsiElement;
 
 public interface OtlImport extends PsiElement {
 
-  @NotNull
-  List<OtlKlassName> getKlassNameList();
-
-  @NotNull
-  List<OtlMethodName> getMethodNameList();
-
-  @Nullable
-  OtlVariableName getVariableName();
-
 }

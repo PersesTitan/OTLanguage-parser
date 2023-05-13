@@ -41,5 +41,13 @@
                 implementationClass="com.otl.sdk.language.OtlParserDefinition"/>
         <lang.syntaxHighlighterFactory language="OTLanguage"
                 implementationClass="com.otl.sdk.language.syntax.OtlSyntaxHighlighterFactory"/>
+        <lang.findUsagesProvider language="OTLanguage"
+                                 implementationClass="com.otl.sdk.language.OtlFindUsagesProvider"/>
+        <colorSettingsPage implementation="com.otl.sdk.language.OtlColorSettingsPage"/>
+        <psi.referenceContributor language="OTLanguage"
+                                  implementation="com.otl.sdk.language.util.OtlReferenceContributor"/>
+        <annotator language="OTLanguage"
+                   implementationClass="com.otl.sdk.language.annotator.OtlAnnotator"/>
+        <navbar implementation="com.otl.sdk.language.OtlStructureAwareNavbar"/>
     </extensions>
 </idea-plugin>
