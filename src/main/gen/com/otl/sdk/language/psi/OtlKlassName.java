@@ -4,9 +4,10 @@ package com.otl.sdk.language.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.otl.sdk.language.element.OtlNamedElement;
 import com.intellij.navigation.ItemPresentation;
 
-public interface OtlKlassName extends PsiElement {
+public interface OtlKlassName extends OtlNamedElement {
 
   @NotNull
   PsiElement getKlassIdentifier();

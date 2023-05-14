@@ -16,8 +16,6 @@ public class OtlReferenceContributor extends PsiReferenceContributor {
             @Override
             public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element,
                                                                    @NotNull ProcessingContext context) {
-//                @NotNull PsiElement ele = element.getParent();
-                System.out.println(element);
                 if (element instanceof OtlDefineParams items) {
 //                    return items
 //                            .getKlassNameList()

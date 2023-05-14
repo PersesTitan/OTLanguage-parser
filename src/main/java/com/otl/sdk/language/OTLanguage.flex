@@ -1,9 +1,9 @@
 package com.otl.sdk.language;
 
 import com.intellij.lexer.FlexLexer;
-import com.intellij.psi.PsiElement;import com.intellij.psi.tree.IElementType;
-import com.otl.sdk.language.psi.OtlTokenType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
+import com.otl.sdk.language.annotator.OtlToken;
 
 %%
 %class OtlLexer
@@ -42,19 +42,47 @@ LOOP_E="}"
 PARAM_S="["
 PARAM_E="]"
 
+%{
+    IElementType gokm() {
+        return switch (yystate()) {
+            case IS_KLASS -> OtlTypes.KLASS_KEY;
+            case IS_METHOD -> OtlTypes.METHOD_KEY;
+            default -> TokenType.BAD_CHARACTER;
+        };
+    }
+
+    // 텍스트<공백> => "공백" 길이
+    int backBlank() {
+        CharSequence cs = yytext();
+        int size = 0;
+        for (int i=cs.length()-1; i>=0; i--) {
+            if (OtlToken.BLANKS.contains(cs.charAt(i))) size++;
+        }
+        return size;
+    }
+
+    // <공백>텍스트 => "텍스트" 길이
+    int blank() {
+        int count = 0;
+        for (char c : yytext().toString().toCharArray()) {
+            if (OtlToken.BLANKS.contains(c)) count++;
+            else break;
+        }
+        return yylength() - count;
+    }
+%}
 %state IMPORT
+%state VALUE
 %state CREATE_VARIABLE
-
-%state DEFINE_KLASS IS_KLASS IS_NAME_KLASS
-%state DEFINE_METHOD IS_METHOD IS_NAME_METHOD
-
+%state IS_KLASS IS_METHOD
 %%
 
 <YYINITIAL> {
     {REMARK}                  { yybegin(YYINITIAL); return OtlTypes.REMARK; }
-    {IMPORT}                  { yybegin(IMPORT); return OtlTypes.ㅇㅍㅇ; }
-    {KLASS}                   { yybegin(DEFINE_KLASS); return OtlTypes.ㅋㅅㅋ; }
-    {METHOD}                  { yybegin(DEFINE_METHOD); return OtlTypes.ㅁㅅㅁ; }
+    {IMPORT}{WHITE_SPACE}+    { yypushback(backBlank()); yybegin(IMPORT); return OtlTypes.ㅇㅍㅇ; }
+    {KLASS}{WHITE_SPACE}+     { yypushback(backBlank()); yybegin(IS_KLASS); return OtlTypes.ㅋㅅㅋ; }
+    {METHOD}{WHITE_SPACE}+    { yypushback(backBlank()); yybegin(IS_METHOD); return OtlTypes.ㅁㅅㅁ; }
+    {KLASS_IDENTIFIER}{WHITE_SPACE}+ { yypushback(backBlank()); yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER; }
 }
 
 <IMPORT> {
@@ -62,53 +90,24 @@ PARAM_E="]"
     {ALL_CHARACTER}+           { yybegin(YYINITIAL); return OtlTypes.IMPORT_KEY; }
 }
 
-// =============== DEFINE_METHOD ===============
-<DEFINE_METHOD> {
-    {WHITE_SPACE}+             { return TokenType.WHITE_SPACE; }
-    {METHOD_IDENTIFIER}        { return OtlTypes.METHOD_KEY; }
-    {PARAM_S}                  { yybegin(IS_METHOD);  return OtlTypes.PARAM_S; }
-    {LOOP_S}                   { yybegin(YYINITIAL); return OtlTypes.LOOP_S; }
-    [^]                        { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
+<CREATE_VARIABLE> {
+    {WHITE_SPACE}+{VARIABLE_IDENTIFIER}     { yypushback(blank()); return TokenType.WHITE_SPACE; }
+    ":"{ALL_CHARACTER}*                     { yypushback(yylength()-1); yybegin(VALUE); return OtlTypes.VAR_TOKEN; }
+    {VARIABLE_IDENTIFIER}":"                { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
 }
 
-// <클래스 타입><공백> or <]>
-<IS_METHOD> {
-    {PARAM_E}                  { yybegin(DEFINE_METHOD); return OtlTypes.PARAM_E; }
-    {KLASS_IDENTIFIER}         { return OtlTypes.KLASS_IDENTIFIER; }
-    {WHITE_SPACE}+             { yybegin(IS_NAME_METHOD); return TokenType.WHITE_SPACE; }
-}
+<VALUE>{ALL_CHARACTER}*           { yybegin(YYINITIAL); return OtlTypes.VALUE_KEY; }
 
-// <변수명><]>
-<IS_NAME_METHOD> {
-    {VARIABLE_IDENTIFIER}      { return OtlTypes.VARIABLE_IDENTIFIER; }
-    {PARAM_E}                  { yybegin(DEFINE_METHOD); return OtlTypes.PARAM_E; }
+<IS_KLASS, IS_METHOD> {
+    {WHITE_SPACE}+({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER})   { yypushback(blank()); return TokenType.WHITE_SPACE; }
+    ({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER}){PARAM_S}        { yypushback(1); return gokm(); }
+    {PARAM_S}({PARAM_E}|{KLASS_IDENTIFIER})                  { yypushback(yylength()-1); return OtlTypes.PARAM_S; }
+    {PARAM_E}                                                { return OtlTypes.PARAM_E; }
+    {KLASS_IDENTIFIER}{WHITE_SPACE}+                         { yypushback(backBlank()); return OtlTypes.KLASS_IDENTIFIER; }
+    {WHITE_SPACE}+{VARIABLE_IDENTIFIER}                      { yypushback(blank()); return TokenType.WHITE_SPACE; }
+    {VARIABLE_IDENTIFIER}{PARAM_E}                           { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
+    {WHITE_SPACE}*{LOOP_S}                                   { yybegin(YYINITIAL); return OtlTypes.LOOP_S; }
 }
-
-// =============== DEFINE KLASS ===============
-<DEFINE_KLASS> {
-    {WHITE_SPACE}+             { return TokenType.WHITE_SPACE; }
-    {KLASS_IDENTIFIER}         { return OtlTypes.KLASS_KEY; }
-    {PARAM_S}                  { yybegin(IS_KLASS); return OtlTypes.PARAM_S; }
-    {LOOP_S}                   { yybegin(YYINITIAL); return OtlTypes.LOOP_S; }
-    [^]                        { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
-}
-
-// <클래스 타입><공백> or <]>
-<IS_KLASS> {
-    {PARAM_E}                  { yybegin(DEFINE_KLASS); return OtlTypes.PARAM_E; }
-    {KLASS_IDENTIFIER}         { return OtlTypes.KLASS_IDENTIFIER; }
-    {WHITE_SPACE}+             { yybegin(IS_NAME_KLASS); return TokenType.WHITE_SPACE; }
-}
-
-// <변수명><]>
-<IS_NAME_KLASS> {
-    {VARIABLE_IDENTIFIER}      { return OtlTypes.VARIABLE_IDENTIFIER; }
-    {PARAM_E}                  { yybegin(DEFINE_KLASS); return OtlTypes.PARAM_E; }
-}
-
-//<DEFINE_PARAMS> {
-//
-//}
 
 {WHITE_SPACE}*{NEW_LINE}+{WHITE_SPACE}*            { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 [^]                                                { return TokenType.BAD_CHARACTER; }

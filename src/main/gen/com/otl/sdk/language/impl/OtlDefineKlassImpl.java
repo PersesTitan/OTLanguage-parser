@@ -7,13 +7,12 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static com.otl.sdk.language.OtlTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.otl.sdk.language.element.OtlNamedElementImpl;
 import com.otl.sdk.language.psi.*;
 import com.otl.sdk.language.util.utils.OtlPsiUtil;
 import com.intellij.navigation.ItemPresentation;
 
-public class OtlDefineKlassImpl extends ASTWrapperPsiElement implements OtlDefineKlass {
+public class OtlDefineKlassImpl extends OtlNamedElementImpl implements OtlDefineKlass {
 
   public OtlDefineKlassImpl(@NotNull ASTNode node) {
     super(node);

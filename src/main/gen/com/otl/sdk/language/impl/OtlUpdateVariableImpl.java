@@ -30,20 +30,8 @@ public class OtlUpdateVariableImpl extends ASTWrapperPsiElement implements OtlUp
 
   @Override
   @NotNull
-  public List<OtlKlassName> getKlassNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlKlassName.class);
-  }
-
-  @Override
-  @NotNull
-  public List<OtlMethodName> getMethodNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlMethodName.class);
-  }
-
-  @Override
-  @NotNull
-  public List<OtlVariableName> getVariableNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlVariableName.class);
+  public OtlVariableName getVariableName() {
+    return findNotNullChildByClass(OtlVariableName.class);
   }
 
 }

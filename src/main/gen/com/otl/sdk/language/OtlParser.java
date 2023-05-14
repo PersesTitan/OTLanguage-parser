@@ -135,7 +135,7 @@ public class OtlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // KLASS_NAME ('[' INT ']')? VARIABLE_NAME ':' value
+  // KLASS_NAME ('[' INT ']')? VARIABLE_NAME ':' VALUE_KEY
   public static boolean CREATE_VARIABLE(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CREATE_VARIABLE")) return false;
     if (!nextTokenIs(b, KLASS_IDENTIFIER)) return false;
@@ -144,8 +144,7 @@ public class OtlParser implements PsiParser, LightPsiParser {
     r = KLASS_NAME(b, l + 1);
     r = r && CREATE_VARIABLE_1(b, l + 1);
     r = r && VARIABLE_NAME(b, l + 1);
-    r = r && consumeToken(b, VAR_TOKEN);
-    r = r && value(b, l + 1);
+    r = r && consumeTokens(b, 0, VAR_TOKEN, VALUE_KEY);
     exit_section_(b, m, CREATE_VARIABLE, r);
     return r;
   }
@@ -207,7 +206,7 @@ public class OtlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ( ㅁㅅㅁ | ㅁㅆㅁ ) METHOD_KEY DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)?
+  // (ㅁㅅㅁ|ㅁㅆㅁ) METHOD_KEY DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)?
   public static boolean DEFINE_METHOD(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DEFINE_METHOD")) return false;
     if (!nextTokenIs(b, "<define method>", ㅁㅅㅁ, ㅁㅆㅁ)) return false;
@@ -225,7 +224,7 @@ public class OtlParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // ㅁㅅㅁ | ㅁㅆㅁ
+  // ㅁㅅㅁ|ㅁㅆㅁ
   private static boolean DEFINE_METHOD_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DEFINE_METHOD_0")) return false;
     boolean r;
@@ -671,16 +670,16 @@ public class OtlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // USE_VARIABLE ':' value
+  // USE_VARIABLE ':' VALUE_KEY
   public static boolean UPDATE_VARIABLE(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "UPDATE_VARIABLE")) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, UPDATE_VARIABLE, "<update variable>");
     r = USE_VARIABLE(b, l + 1);
-    r = r && consumeToken(b, VAR_TOKEN);
-    r = r && value(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    r = r && consumeTokens(b, 1, VAR_TOKEN, VALUE_KEY);
+    p = r; // pin = 2
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */

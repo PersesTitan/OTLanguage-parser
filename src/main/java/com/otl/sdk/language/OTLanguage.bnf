@@ -85,14 +85,22 @@ OtlFile ::= (LINES | DEFINE_METHOD | DEFINE_KLASS)*
 private LINES ::= REMARK_TOKEN | IMPORT | UPDATE_VARIABLE | CREATE_VARIABLE
 
 REMARK_TOKEN ::= '#' "regexp:[^\n\r]*" { pin=1 }
-CREATE_VARIABLE ::= KLASS_NAME ('[' INT ']')? VARIABLE_NAME ':' value
+CREATE_VARIABLE ::= KLASS_NAME ('[' INT ']')? VARIABLE_NAME ':' VALUE_KEY
 // 변수명:변경할 값
-UPDATE_VARIABLE ::= USE_VARIABLE ':' value { pin=3 }
-DEFINE_METHOD ::= ( ㅁㅅㅁ | ㅁㅆㅁ ) METHOD_KEY DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)? { pin=1 }
-DEFINE_KLASS ::= ㅋㅅㅋ KLASS_KEY DEFINE_PARAMS '{' (LINES | DEFINE_METHOD)* '}' {
+UPDATE_VARIABLE ::= USE_VARIABLE ':' VALUE_KEY { pin=2 }
+DEFINE_METHOD ::= (ㅁㅅㅁ|ㅁㅆㅁ) METHOD_KEY DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)? {
     pin=1
+    mixin="com.otl.sdk.language.element.OtlNamedElementImpl"
+    implements="com.otl.sdk.language.element.OtlNamedElement"
     methods=[getKey getName setName getNameIdentifier getPresentation]
 }
+DEFINE_KLASS ::= ㅋㅅㅋ KLASS_KEY DEFINE_PARAMS '{' (LINES | DEFINE_METHOD)* '}' {
+    pin=1
+    mixin="com.otl.sdk.language.element.OtlNamedElementImpl"
+    implements="com.otl.sdk.language.element.OtlNamedElement"
+    methods=[getKey getName setName getNameIdentifier getPresentation]
+}
+
 IMPORT ::= ㅇㅍㅇ IMPORT_KEY { pin=1 }
 
 DEFINE_PARAMS ::= '[]' | ('[' KLASS_NAME VARIABLE_NAME ']')+
@@ -125,5 +133,8 @@ private METHOD_ITEM ::= METHOD_NAME param? // 메소드명[값1][값2]
 VARIABLE_NAME ::= VARIABLE_IDENTIFIER
 METHOD_NAME ::= METHOD_IDENTIFIER
 KLASS_NAME ::= KLASS_IDENTIFIER {
+    pin=1
+    mixin="com.otl.sdk.language.element.OtlNamedElementImpl"
+    implements="com.otl.sdk.language.element.OtlNamedElement"
     methods=[getKey getName setName getNameIdentifier getPresentation]
 }

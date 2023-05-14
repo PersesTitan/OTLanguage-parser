@@ -4,6 +4,7 @@ package com.otl.sdk.language.psi;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import com.otl.sdk.language.element.OtlNamedElement;
 
 public class OtlVisitor extends PsiElementVisitor {
 
@@ -12,11 +13,11 @@ public class OtlVisitor extends PsiElementVisitor {
   }
 
   public void visitDefineKlass(@NotNull OtlDefineKlass o) {
-    visitPsiElement(o);
+    visitNamedElement(o);
   }
 
   public void visitDefineMethod(@NotNull OtlDefineMethod o) {
-    visitPsiElement(o);
+    visitNamedElement(o);
   }
 
   public void visitDefineParams(@NotNull OtlDefineParams o) {
@@ -28,7 +29,7 @@ public class OtlVisitor extends PsiElementVisitor {
   }
 
   public void visitKlassName(@NotNull OtlKlassName o) {
-    visitPsiElement(o);
+    visitNamedElement(o);
   }
 
   public void visitMethodName(@NotNull OtlMethodName o) {
@@ -44,6 +45,10 @@ public class OtlVisitor extends PsiElementVisitor {
   }
 
   public void visitVariableName(@NotNull OtlVariableName o) {
+    visitPsiElement(o);
+  }
+
+  public void visitNamedElement(@NotNull OtlNamedElement o) {
     visitPsiElement(o);
   }
 

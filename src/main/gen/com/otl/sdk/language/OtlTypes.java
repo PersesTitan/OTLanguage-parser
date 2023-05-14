@@ -58,6 +58,7 @@ public interface OtlTypes {
   IElementType STRING = new OtlTokenType("STRING");
   IElementType SUB = new OtlTokenType("ㅇ-ㅇ");
   IElementType TRUE = new OtlTokenType("ㅇㅇ");
+  IElementType VALUE_KEY = new OtlTokenType("VALUE_KEY");
   IElementType VARIABLE_IDENTIFIER = new OtlTokenType("VARIABLE_IDENTIFIER");
   IElementType VAR_TOKEN = new OtlTokenType(":");
   IElementType ㅁㅅㅁ = new OtlTokenType("ㅁㅅㅁ");

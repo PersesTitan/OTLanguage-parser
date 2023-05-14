@@ -8,12 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface OtlUpdateVariable extends PsiElement {
 
   @NotNull
-  List<OtlKlassName> getKlassNameList();
-
-  @NotNull
-  List<OtlMethodName> getMethodNameList();
-
-  @NotNull
-  List<OtlVariableName> getVariableNameList();
+  OtlVariableName getVariableName();
 
 }

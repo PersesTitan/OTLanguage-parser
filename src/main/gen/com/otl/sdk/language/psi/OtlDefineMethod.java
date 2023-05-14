@@ -4,8 +4,10 @@ package com.otl.sdk.language.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.otl.sdk.language.element.OtlNamedElement;
+import com.intellij.navigation.ItemPresentation;
 
-public interface OtlDefineMethod extends PsiElement {
+public interface OtlDefineMethod extends OtlNamedElement {
 
   @NotNull
   List<OtlCreateVariable> getCreateVariableList();
@@ -30,5 +32,15 @@ public interface OtlDefineMethod extends PsiElement {
 
   @NotNull
   List<OtlVariableName> getVariableNameList();
+
+  String getKey();
+
+  String getName();
+
+  PsiElement setName(String name);
+
+  PsiElement getNameIdentifier();
+
+  ItemPresentation getPresentation();
 
 }
