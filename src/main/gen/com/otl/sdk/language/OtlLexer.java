@@ -6,7 +6,7 @@ package com.otl.sdk.language;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
-import com.otl.sdk.language.annotator.OtlToken;
+import java.util.Stack;
 
 
 class OtlLexer implements FlexLexer {
@@ -21,9 +21,13 @@ class OtlLexer implements FlexLexer {
   public static final int YYINITIAL = 0;
   public static final int IMPORT = 2;
   public static final int VALUE = 4;
-  public static final int CREATE_VARIABLE = 6;
-  public static final int IS_KLASS = 8;
-  public static final int IS_METHOD = 10;
+  public static final int LINE = 6;
+  public static final int CREATE_VARIABLE = 8;
+  public static final int UPDATE_VARIABLE = 10;
+  public static final int IS_KLASS = 12;
+  public static final int IS_METHOD = 14;
+  public static final int KLASS_LOOP = 16;
+  public static final int METHOD_LOOP = 18;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -32,7 +36,8 @@ class OtlLexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = {
-     0,  0,  1,  1,  2,  2,  3,  3,  4,  4,  4, 4
+     0,  0,  1,  1,  2,  2,  3,  3,  4,  4,  5,  5,  6,  6,  6,  6, 
+     7,  7,  8, 8
   };
 
   /**
@@ -72,8 +77,9 @@ class OtlLexer implements FlexLexer {
     "\11\0\1\1\1\2\1\0\1\1\1\2\22\0\1\1"+
     "\2\0\1\3\11\0\1\4\2\0\12\4\1\5\6\0"+
     "\32\6\1\7\1\0\1\10\1\0\1\4\1\0\32\6"+
-    "\1\11\u01b5\0\20\6\1\12\3\6\1\13\1\6\1\14"+
-    "\3\6\1\15\1\6\1\16\26\6\234\0\u019e\6\142\0";
+    "\1\11\1\0\1\12\u01b3\0\20\6\1\13\3\6\1\14"+
+    "\1\15\1\16\3\6\1\17\1\6\1\20\26\6\234\0"+
+    "\u019e\6\142\0";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[1280];
@@ -100,13 +106,13 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\2\0\1\1\2\0\2\2\1\3\1\4\4\2\1\5"+
-    "\1\6\1\1\1\2\1\7\4\2\1\10\1\11\1\0"+
-    "\1\3\1\12\6\0\1\13\1\0\1\14\1\15\1\0"+
-    "\1\16\2\17\3\0\1\20\1\21\1\22";
+    "\2\0\1\1\6\0\2\2\1\3\1\4\5\2\1\5"+
+    "\1\1\1\6\1\7\3\2\1\10\1\11\1\12\4\0"+
+    "\1\13\4\0\1\14\1\15\1\0\1\16\1\17\2\20"+
+    "\4\0\1\21\1\22\1\23\1\24";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[47];
+    int [] result = new int[52];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -131,15 +137,16 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\17\0\36\0\55\0\74\0\113\0\132\0\151"+
-    "\0\170\0\207\0\226\0\245\0\264\0\303\0\17\0\322"+
-    "\0\341\0\360\0\377\0\u010e\0\u011d\0\u012c\0\113\0\113"+
-    "\0\132\0\u013b\0\u014a\0\207\0\u0159\0\u0168\0\u0177\0\341"+
-    "\0\377\0\113\0\u010e\0\u0186\0\u0195\0\u011d\0\113\0\u01a4"+
-    "\0\113\0\u01b3\0\u01c2\0\u01d1\0\u01e0\0\u01ef\0\u01fe";
+    "\0\0\0\21\0\42\0\63\0\104\0\125\0\146\0\167"+
+    "\0\210\0\231\0\252\0\273\0\314\0\335\0\356\0\377"+
+    "\0\u0110\0\u0121\0\u0132\0\u0143\0\u0154\0\231\0\u0165\0\u0176"+
+    "\0\u0187\0\231\0\231\0\231\0\252\0\u0198\0\u01a9\0\356"+
+    "\0\231\0\u01ba\0\u01cb\0\u01dc\0\u0165\0\u01ed\0\u01fe\0\u0176"+
+    "\0\231\0\231\0\u020f\0\231\0\u0220\0\u0231\0\u0242\0\u0253"+
+    "\0\231\0\u0264\0\u0275\0\u0286";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[47];
+    int [] result = new int[52];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -162,35 +169,42 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\6\1\7\1\10\1\11\2\6\1\12\3\6\1\13"+
-    "\1\12\1\14\1\15\1\12\1\16\1\17\1\10\14\16"+
-    "\1\20\1\3\1\10\14\20\1\6\1\21\1\10\2\6"+
-    "\1\22\1\23\3\6\5\23\1\6\1\24\1\10\3\6"+
-    "\1\25\1\26\1\27\1\30\5\25\20\0\1\31\1\10"+
-    "\1\11\14\0\1\32\1\10\14\0\2\11\1\0\14\11"+
-    "\1\0\1\33\2\0\1\34\1\0\1\34\3\0\5\34"+
-    "\1\0\1\33\2\0\1\34\1\0\1\34\3\0\1\34"+
-    "\1\35\3\34\1\0\1\33\2\0\1\34\1\0\1\34"+
-    "\3\0\4\34\1\36\1\0\1\33\2\0\1\34\1\0"+
-    "\1\34\3\0\1\34\1\37\3\34\2\16\1\0\14\16"+
-    "\2\20\1\0\14\20\1\0\1\40\1\10\14\0\2\22"+
-    "\1\0\14\22\4\0\1\41\1\42\1\41\3\0\5\41"+
-    "\1\0\1\43\1\10\3\0\1\44\2\0\1\30\5\44"+
-    "\1\0\1\45\2\0\1\46\1\0\1\46\1\47\1\42"+
-    "\1\0\5\46\6\0\1\50\1\0\1\51\1\0\5\50"+
-    "\1\0\1\32\16\0\1\33\16\0\1\33\2\0\1\34"+
-    "\1\0\1\34\3\0\1\52\4\34\1\0\1\33\2\0"+
-    "\1\34\1\0\1\34\3\0\2\34\1\53\2\34\1\0"+
-    "\1\33\2\0\1\34\1\0\1\34\3\0\3\34\1\54"+
-    "\1\34\4\0\1\44\1\0\1\44\3\0\5\44\1\0"+
-    "\1\45\21\0\1\50\1\0\1\50\3\0\5\50\1\0"+
-    "\1\55\2\0\1\34\1\0\1\34\3\0\5\34\1\0"+
-    "\1\56\2\0\1\34\1\0\1\34\3\0\5\34\1\0"+
-    "\1\57\2\0\1\34\1\0\1\34\3\0\5\34\1\0"+
-    "\1\55\16\0\1\56\16\0\1\57\15\0";
+    "\1\12\1\13\1\14\1\15\1\12\1\16\1\17\4\12"+
+    "\1\20\2\17\1\21\1\22\1\17\1\12\1\23\1\14"+
+    "\1\15\15\12\1\24\1\3\1\14\16\24\1\12\1\13"+
+    "\1\14\1\15\16\12\1\25\1\14\1\15\1\12\1\26"+
+    "\14\12\1\13\1\14\1\15\1\12\1\26\14\12\1\27"+
+    "\1\14\1\15\2\12\1\30\1\31\1\32\1\33\1\12"+
+    "\6\30\1\12\1\13\1\14\1\15\1\12\1\16\1\17"+
+    "\3\12\1\34\1\20\2\17\1\21\2\17\1\12\1\13"+
+    "\1\14\1\15\1\12\1\16\1\17\3\12\1\34\3\17"+
+    "\1\21\2\17\22\0\1\35\1\14\17\0\2\14\16\0"+
+    "\2\15\1\0\16\15\6\0\1\36\4\0\6\36\1\0"+
+    "\1\37\2\0\1\40\1\41\1\40\4\0\6\40\1\0"+
+    "\1\37\2\0\1\40\1\41\1\40\4\0\1\40\2\42"+
+    "\3\40\1\0\1\37\2\0\1\40\1\41\1\40\4\0"+
+    "\5\40\1\43\1\0\1\37\2\0\1\40\1\41\1\40"+
+    "\4\0\1\40\1\44\4\40\1\0\1\23\1\14\16\0"+
+    "\2\24\1\0\16\24\1\0\1\25\1\14\17\0\1\45"+
+    "\1\14\3\0\1\46\2\0\1\33\1\0\6\46\1\0"+
+    "\1\47\2\0\1\50\1\0\1\50\1\51\1\52\2\0"+
+    "\6\50\6\0\1\53\1\0\1\54\2\0\6\53\4\0"+
+    "\1\36\1\41\1\36\4\0\6\36\1\0\1\37\4\0"+
+    "\1\55\4\0\6\55\1\0\1\37\2\0\1\40\1\41"+
+    "\1\40\4\0\1\56\5\40\1\0\1\37\2\0\1\40"+
+    "\1\41\1\40\4\0\3\40\1\57\2\40\1\0\1\37"+
+    "\2\0\1\40\1\41\1\40\4\0\4\40\1\60\1\40"+
+    "\4\0\1\46\1\0\1\46\4\0\6\46\1\0\1\47"+
+    "\23\0\1\53\1\0\1\53\4\0\6\53\4\0\1\55"+
+    "\1\61\1\55\4\0\6\55\1\0\1\62\2\0\1\40"+
+    "\1\41\1\40\4\0\6\40\1\0\1\63\2\0\1\40"+
+    "\1\41\1\40\4\0\6\40\1\0\1\64\2\0\1\40"+
+    "\1\41\1\40\4\0\6\40\1\0\1\62\4\0\1\55"+
+    "\4\0\6\55\1\0\1\63\4\0\1\55\4\0\6\55"+
+    "\1\0\1\64\4\0\1\55\4\0\6\55";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[525];
+    int [] result = new int[663];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -228,12 +242,12 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\2\0\1\1\2\0\1\11\20\1\2\11\1\0\2\1"+
-    "\6\0\1\11\1\0\2\1\1\0\1\11\1\1\1\11"+
-    "\3\0\3\1";
+    "\2\0\1\1\6\0\1\11\13\1\1\11\3\1\3\11"+
+    "\4\0\1\11\4\0\2\1\1\0\2\11\1\1\1\11"+
+    "\4\0\1\11\3\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[47];
+    int [] result = new int[52];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -299,33 +313,16 @@ class OtlLexer implements FlexLexer {
   private boolean zzEOFDone;
 
   /* user code: */
-    IElementType gokm() {
-        return switch (yystate()) {
-            case IS_KLASS -> OtlTypes.KLASS_KEY;
-            case IS_METHOD -> OtlTypes.METHOD_KEY;
-            default -> TokenType.BAD_CHARACTER;
-        };
+    Stack<Integer> state = new Stack<>();
+    public int pop() {
+//        return state.isEmpty() ? YYINITIAL : state.lastElement();
+        return state.isEmpty() ? YYINITIAL : state.lastElement();
     }
 
     // 텍스트<공백> => "공백" 길이
-    int backBlank() {
-        CharSequence cs = yytext();
-        int size = 0;
-        for (int i=cs.length()-1; i>=0; i--) {
-            if (OtlToken.BLANKS.contains(cs.charAt(i))) size++;
-        }
-        return size;
-    }
-
+    int backBlank() { return OtlFlex.backBlank(yytext()); }
     // <공백>텍스트 => "텍스트" 길이
-    int blank() {
-        int count = 0;
-        for (char c : yytext().toString().toCharArray()) {
-            if (OtlToken.BLANKS.contains(c)) count++;
-            else break;
-        }
-        return yylength() - count;
-    }
+    int blank() { return OtlFlex.blank(yytext()); }
 
 
   /**
@@ -636,95 +633,105 @@ class OtlLexer implements FlexLexer {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { yybegin(YYINITIAL); return OtlTypes.VALUE_KEY;
+            { yybegin(pop()); return OtlTypes.VALUE_KEY;
             }
           // fall through
-          case 19: break;
+          case 21: break;
           case 2:
             { return TokenType.BAD_CHARACTER;
             }
           // fall through
-          case 20: break;
-          case 3:
-            { yybegin(YYINITIAL); return TokenType.WHITE_SPACE;
-            }
-          // fall through
-          case 21: break;
-          case 4:
-            { yybegin(YYINITIAL); return OtlTypes.REMARK;
-            }
-          // fall through
           case 22: break;
-          case 5:
-            { yybegin(YYINITIAL); return OtlTypes.IMPORT_KEY;
+          case 3:
+            { return OtlTypes.CRLF;
             }
           // fall through
           case 23: break;
+          case 4:
+            { return OtlTypes.REMARK;
+            }
+          // fall through
+          case 24: break;
+          case 5:
+            { yybegin(VALUE); return TokenType.WHITE_SPACE;
+            }
+          // fall through
+          case 25: break;
           case 6:
             { return TokenType.WHITE_SPACE;
             }
           // fall through
-          case 24: break;
+          case 26: break;
           case 7:
-            { yypushback(yylength()-1); yybegin(VALUE); return OtlTypes.VAR_TOKEN;
+            { yybegin(VALUE); return OtlTypes.VAR_TOKEN;
             }
           // fall through
-          case 25: break;
+          case 27: break;
           case 8:
             { return OtlTypes.PARAM_E;
             }
           // fall through
-          case 26: break;
-          case 9:
-            { yybegin(YYINITIAL); return OtlTypes.LOOP_S;
-            }
-          // fall through
-          case 27: break;
-          case 10:
-            { yypushback(backBlank()); yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER;
-            }
-          // fall through
           case 28: break;
-          case 11:
-            { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER;
+          case 9:
+            { yybegin(OtlFlex.loopKM(this)); return OtlTypes.LOOP_S;
             }
           // fall through
           case 29: break;
-          case 12:
-            { yypushback(blank()); return TokenType.WHITE_SPACE;
+          case 10:
+            { state.pop(); yybegin(pop()); return OtlTypes.LOOP_E;
             }
           // fall through
           case 30: break;
-          case 13:
-            { yypushback(backBlank()); return OtlTypes.KLASS_IDENTIFIER;
+          case 11:
+            { yypushback(1); yybegin(OtlLexer.UPDATE_VARIABLE); return OtlTypes.UPDATE_VARIABLE;
             }
           // fall through
           case 31: break;
-          case 14:
-            { yypushback(1); return gokm();
+          case 12:
+            { yypushback(OtlFlex.max(this)); return TokenType.WHITE_SPACE;
             }
           // fall through
           case 32: break;
-          case 15:
-            { yypushback(yylength()-1); return OtlTypes.PARAM_S;
+          case 13:
+            { yypushback(OtlFlex.min(this)); return OtlTypes.KLASS_IDENTIFIER;
             }
           // fall through
           case 33: break;
-          case 16:
-            { yypushback(backBlank()); yybegin(IS_METHOD); return OtlTypes.ㅁㅅㅁ;
+          case 14:
+            { yypushback(1); return OtlFlex.tokenKM(yystate());
             }
           // fall through
           case 34: break;
-          case 17:
-            { yypushback(backBlank()); yybegin(IMPORT); return OtlTypes.ㅇㅍㅇ;
+          case 15:
+            { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER;
             }
           // fall through
           case 35: break;
-          case 18:
-            { yypushback(backBlank()); yybegin(IS_KLASS); return OtlTypes.ㅋㅅㅋ;
+          case 16:
+            { yypushback(yylength()-1); return OtlTypes.PARAM_S;
             }
           // fall through
           case 36: break;
+          case 17:
+            { yypushback(OtlFlex.min(this)); yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER;
+            }
+          // fall through
+          case 37: break;
+          case 18:
+            { yypushback(OtlFlex.min(this)); state.add(METHOD_LOOP); return OtlFlex.checkType(this);
+            }
+          // fall through
+          case 38: break;
+          case 19:
+            { yypushback(OtlFlex.min(this)); return OtlFlex.checkType(this);
+            }
+          // fall through
+          case 39: break;
+          case 20:
+            { yypushback(OtlFlex.min(this)); state.add(KLASS_LOOP); return OtlFlex.checkType(this);
+            }
+          // fall through
+          case 40: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

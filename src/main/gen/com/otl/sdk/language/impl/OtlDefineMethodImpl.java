@@ -54,6 +54,12 @@ public class OtlDefineMethodImpl extends OtlNamedElementImpl implements OtlDefin
   }
 
   @Override
+  @Nullable
+  public OtlMethodKeyName getMethodKeyName() {
+    return findChildByClass(OtlMethodKeyName.class);
+  }
+
+  @Override
   @NotNull
   public List<OtlMethodName> getMethodNameList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, OtlMethodName.class);

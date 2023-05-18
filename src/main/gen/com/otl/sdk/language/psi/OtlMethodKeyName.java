@@ -6,12 +6,8 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.otl.sdk.language.element.OtlNamedElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiReference;
 
-public interface OtlKlassName extends OtlNamedElement {
-
-  @NotNull
-  PsiElement getKlassIdentifier();
+public interface OtlMethodKeyName extends OtlNamedElement {
 
   String getKey();
 
@@ -22,9 +18,5 @@ public interface OtlKlassName extends OtlNamedElement {
   PsiElement getNameIdentifier();
 
   ItemPresentation getPresentation();
-
-  PsiReference getReference();
-
-  PsiReference @NotNull [] getReferences();
 
 }

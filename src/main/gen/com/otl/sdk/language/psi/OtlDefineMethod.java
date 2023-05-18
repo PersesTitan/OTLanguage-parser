@@ -21,6 +21,9 @@ public interface OtlDefineMethod extends OtlNamedElement {
   @NotNull
   List<OtlKlassName> getKlassNameList();
 
+  @Nullable
+  OtlMethodKeyName getMethodKeyName();
+
   @NotNull
   List<OtlMethodName> getMethodNameList();
 

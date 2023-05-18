@@ -13,7 +13,7 @@ public class OtlVisitor extends PsiElementVisitor {
   }
 
   public void visitDefineKlass(@NotNull OtlDefineKlass o) {
-    visitNamedElement(o);
+    visitPsiElement(o);
   }
 
   public void visitDefineMethod(@NotNull OtlDefineMethod o) {
@@ -28,7 +28,15 @@ public class OtlVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitKlassKeyName(@NotNull OtlKlassKeyName o) {
+    visitNamedElement(o);
+  }
+
   public void visitKlassName(@NotNull OtlKlassName o) {
+    visitNamedElement(o);
+  }
+
+  public void visitMethodKeyName(@NotNull OtlMethodKeyName o) {
     visitNamedElement(o);
   }
 

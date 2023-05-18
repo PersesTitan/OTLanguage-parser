@@ -3,7 +3,7 @@ package com.otl.sdk.language;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
-import com.otl.sdk.language.annotator.OtlToken;
+import java.util.Stack;
 
 %%
 %class OtlLexer
@@ -23,91 +23,125 @@ VARIABLE_IDENTIFIER=[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*
 KLASS_IDENTIFIER=[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*
 METHOD_IDENTIFIER=[a-zA-Zㄱ-ㅣ가-힝]+[a-zA-Zㄱ-ㅣ가-힝0-9_-]*
 
-REMARK={WHITE_SPACE}*"#"{ALL_CHARACTER}*
-
-//CRLF=\R
 WHITE_SPACE=[\ \t\f]
-START={WHITE_SPACE}*[^\r\n]*
-//NAME=[^\ \t\f\n]+
-//PARAMS="[]"|{DEFINE_PARAMS}
-//
-//DEFINE_PARAM="[]"
-//DEFINE_PARAMS=("["{KLASS_IDENTIFIER}{WHITE_SPACE}+{VARIABLE_IDENTIFIER}"]")+
+
+REMARK="#"
 
 IMPORT="ㅇㅍㅇ"
 KLASS="ㅋㅅㅋ"
 METHOD="ㅁㅅㅁ"
+STATIC="ㅁㅆㅁ"
 LOOP_S="{"
 LOOP_E="}"
 PARAM_S="["
 PARAM_E="]"
 
 %{
-    IElementType gokm() {
-        return switch (yystate()) {
-            case IS_KLASS -> OtlTypes.KLASS_KEY;
-            case IS_METHOD -> OtlTypes.METHOD_KEY;
-            default -> TokenType.BAD_CHARACTER;
-        };
+    Stack<Integer> state = new Stack<>();
+    public int pop() {
+//        return state.isEmpty() ? YYINITIAL : state.lastElement();
+        return state.isEmpty() ? YYINITIAL : state.lastElement();
     }
 
     // 텍스트<공백> => "공백" 길이
-    int backBlank() {
-        CharSequence cs = yytext();
-        int size = 0;
-        for (int i=cs.length()-1; i>=0; i--) {
-            if (OtlToken.BLANKS.contains(cs.charAt(i))) size++;
-        }
-        return size;
-    }
-
+    int backBlank() { return OtlFlex.backBlank(yytext()); }
     // <공백>텍스트 => "텍스트" 길이
-    int blank() {
-        int count = 0;
-        for (char c : yytext().toString().toCharArray()) {
-            if (OtlToken.BLANKS.contains(c)) count++;
-            else break;
-        }
-        return yylength() - count;
-    }
+    int blank() { return OtlFlex.blank(yytext()); }
 %}
+
 %state IMPORT
-%state VALUE
-%state CREATE_VARIABLE
+%state VALUE LINE
+%state CREATE_VARIABLE UPDATE_VARIABLE
 %state IS_KLASS IS_METHOD
+
+%state KLASS_LOOP METHOD_LOOP
 %%
 
-<YYINITIAL> {
-    {REMARK}                  { yybegin(YYINITIAL); return OtlTypes.REMARK; }
-    {IMPORT}{WHITE_SPACE}+    { yypushback(backBlank()); yybegin(IMPORT); return OtlTypes.ㅇㅍㅇ; }
-    {KLASS}{WHITE_SPACE}+     { yypushback(backBlank()); yybegin(IS_KLASS); return OtlTypes.ㅋㅅㅋ; }
-    {METHOD}{WHITE_SPACE}+    { yypushback(backBlank()); yybegin(IS_METHOD); return OtlTypes.ㅁㅅㅁ; }
-    {KLASS_IDENTIFIER}{WHITE_SPACE}+ { yypushback(backBlank()); yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER; }
+<VALUE>{ALL_CHARACTER}*                    { yybegin(pop()); return OtlTypes.VALUE_KEY; }
+<KLASS_LOOP, METHOD_LOOP>{LOOP_E}          { state.pop(); yybegin(pop()); return OtlTypes.LOOP_E; }
+
+<YYINITIAL, KLASS_LOOP, METHOD_LOOP> {
+    {IMPORT}{WHITE_SPACE}+
+         { yypushback(OtlFlex.min(this)); return OtlFlex.checkType(this); }
+    {KLASS_IDENTIFIER}{WHITE_SPACE}+{VARIABLE_IDENTIFIER}":"
+        { yypushback(OtlFlex.min(this)); yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER; }
+    ":"?{VARIABLE_IDENTIFIER}":"
+        { yypushback(1); yybegin(OtlLexer.UPDATE_VARIABLE); return OtlTypes.UPDATE_VARIABLE; }
+}
+<YYINITIAL, KLASS_LOOP>({METHOD}|{STATIC}){WHITE_SPACE}+
+    { yypushback(OtlFlex.min(this)); state.add(METHOD_LOOP); return OtlFlex.checkType(this); }
+
+<YYINITIAL>{KLASS}{WHITE_SPACE}+
+    { yypushback(OtlFlex.min(this)); state.add(KLASS_LOOP); return OtlFlex.checkType(this); }
+
+<IMPORT>{WHITE_SPACE}+                   { yybegin(VALUE); return TokenType.WHITE_SPACE; }
+<CREATE_VARIABLE>{WHITE_SPACE}+          { return TokenType.WHITE_SPACE; }
+<CREATE_VARIABLE, UPDATE_VARIABLE>":"    { yybegin(VALUE); return OtlTypes.VAR_TOKEN; }
+
+<IS_METHOD, IS_KLASS> {
+    {WHITE_SPACE}+({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER})
+        { yypushback(OtlFlex.max(this)); return TokenType.WHITE_SPACE; }
+    ({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER}){PARAM_S}
+        { yypushback(1); return OtlFlex.tokenKM(yystate()); }
+    {PARAM_S}({KLASS_IDENTIFIER}|{PARAM_E})
+        { yypushback(yylength()-1); return OtlTypes.PARAM_S; }
+    {KLASS_IDENTIFIER}{WHITE_SPACE}+
+        { yypushback(OtlFlex.min(this)); return OtlTypes.KLASS_IDENTIFIER; }
+    {VARIABLE_IDENTIFIER}{PARAM_E}
+        { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
+    {PARAM_E}
+        { return OtlTypes.PARAM_E; }
+    {WHITE_SPACE}*{LOOP_S}
+        { yybegin(OtlFlex.loopKM(this)); return OtlTypes.LOOP_S; }
 }
 
-<IMPORT> {
-    {WHITE_SPACE}+             { return TokenType.WHITE_SPACE; }
-    {ALL_CHARACTER}+           { yybegin(YYINITIAL); return OtlTypes.IMPORT_KEY; }
-}
+({WHITE_SPACE}*{NEW_LINE}+{WHITE_SPACE}*)+    { return OtlTypes.CRLF; }
+{REMARK}{ALL_CHARACTER}*                      { return OtlTypes.REMARK; }
+[^]                                           { return TokenType.BAD_CHARACTER; }
 
-<CREATE_VARIABLE> {
-    {WHITE_SPACE}+{VARIABLE_IDENTIFIER}     { yypushback(blank()); return TokenType.WHITE_SPACE; }
-    ":"{ALL_CHARACTER}*                     { yypushback(yylength()-1); yybegin(VALUE); return OtlTypes.VAR_TOKEN; }
-    {VARIABLE_IDENTIFIER}":"                { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
-}
-
-<VALUE>{ALL_CHARACTER}*           { yybegin(YYINITIAL); return OtlTypes.VALUE_KEY; }
-
-<IS_KLASS, IS_METHOD> {
-    {WHITE_SPACE}+({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER})   { yypushback(blank()); return TokenType.WHITE_SPACE; }
-    ({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER}){PARAM_S}        { yypushback(1); return gokm(); }
-    {PARAM_S}({PARAM_E}|{KLASS_IDENTIFIER})                  { yypushback(yylength()-1); return OtlTypes.PARAM_S; }
-    {PARAM_E}                                                { return OtlTypes.PARAM_E; }
-    {KLASS_IDENTIFIER}{WHITE_SPACE}+                         { yypushback(backBlank()); return OtlTypes.KLASS_IDENTIFIER; }
-    {WHITE_SPACE}+{VARIABLE_IDENTIFIER}                      { yypushback(blank()); return TokenType.WHITE_SPACE; }
-    {VARIABLE_IDENTIFIER}{PARAM_E}                           { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
-    {WHITE_SPACE}*{LOOP_S}                                   { yybegin(YYINITIAL); return OtlTypes.LOOP_S; }
-}
-
-{WHITE_SPACE}*{NEW_LINE}+{WHITE_SPACE}*            { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-[^]                                                { return TokenType.BAD_CHARACTER; }
+//<VALUE>{ALL_CHARACTER}*                                     { yybegin(state); return OtlTypes.VALUE_KEY; }
+////<LINE, IS_KLASS, IS_METHOD>[^]                              { return TokenType.BAD_CHARACTER; }
+//<YYINITIAL, LINE, LOOP_S> {
+//    ({WHITE_SPACE}*{NEW_LINE}+{WHITE_SPACE}*)+              { return OtlTypes.CRLF; }
+//    {REMARK}                                                { return OtlTypes.REMARK; }
+//}
+//
+//
+//// ############################################################ //
+//<LOOP_S>{WHITE_SPACE}*{LOOP_E}          { state=YYINITIAL; yybegin(YYINITIAL); return OtlTypes.LOOP_E; }
+//
+//<YYINITIAL> {
+//    ({KLASS}|{METHOD}){WHITE_SPACE}+    { yypushback(backBlank()); return OtlFlex.checkType(this); }
+//    [^]                                 { yybegin(LINE); }
+//}
+//
+//<LOOP_S, LINE> {
+//    {IMPORT}{WHITE_SPACE}+                     { yypushback(backBlank()); yybegin(IMPORT); return OtlTypes.ㅇㅍㅇ; }
+//    {KLASS_IDENTIFIER}{WHITE_SPACE}+           { yypushback(backBlank()); yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER; }
+//    {VARIABLE_IDENTIFIER}":"                   { yypushback(backBlank()); yybegin(UPDATE_VARIABLE); return OtlTypes.VARIABLE_IDENTIFIER; }
+//}
+//
+//<IMPORT> {
+//    {WHITE_SPACE}+             { return TokenType.WHITE_SPACE; }
+//    {ALL_CHARACTER}+           { yybegin(state); return OtlTypes.IMPORT_KEY; }
+//}
+//
+//<CREATE_VARIABLE> {WHITE_SPACE}+{VARIABLE_IDENTIFIER}     { yypushback(blank()); return TokenType.WHITE_SPACE; }
+//<CREATE_VARIABLE, UPDATE_VARIABLE> {
+//    {VARIABLE_IDENTIFIER}":"                { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
+//    ":"{ALL_CHARACTER}*                     { yypushback(yylength()-1); yybegin(VALUE); return OtlTypes.VAR_TOKEN; }
+//}
+//
+//// ㅋㅅㅋ, ㅁㅅㅁ
+//<IS_KLASS, IS_METHOD> {
+//    {WHITE_SPACE}+({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER})   { yypushback(blank()); return TokenType.WHITE_SPACE; }
+//    ({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER}){PARAM_S}        { yypushback(1); return OtlFlex.gokm(yystate()); }
+//    {PARAM_S}({PARAM_E}|{KLASS_IDENTIFIER})                  { yypushback(yylength()-1); return OtlTypes.PARAM_S; }
+//    {PARAM_E}                                                { return OtlTypes.PARAM_E; }
+//    {KLASS_IDENTIFIER}{WHITE_SPACE}+                         { yypushback(backBlank()); return OtlTypes.KLASS_IDENTIFIER; }
+//    {WHITE_SPACE}+{VARIABLE_IDENTIFIER}                      { yypushback(blank()); return TokenType.WHITE_SPACE; }
+//    {VARIABLE_IDENTIFIER}{PARAM_E}                           { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
+//    {WHITE_SPACE}*{LOOP_S}                                   { state=yystate(); yybegin(LOOP_S); return OtlTypes.LOOP_S; }
+//}
+//
+//[^]                                                { return TokenType.BAD_CHARACTER; }

@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
 import com.otl.sdk.language.psi.OtlDefineKlass;
+import com.otl.sdk.language.psi.OtlKlassKeyName;
 import com.otl.sdk.language.psi.OtlTokenSets;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -40,7 +41,8 @@ public class OtlFindUsagesProvider implements FindUsagesProvider {
 
     @Override
     public @Nls @NotNull String getDescriptiveName(@NotNull PsiElement element) {
-        if (element instanceof OtlDefineKlass item) return item.getKey();
+//        if (element instanceof OtlDefineKlass item) return item.getKey();
+        if (element instanceof OtlKlassKeyName item) return item.getKey();
         return "";
     }
 

@@ -45,9 +45,14 @@
                                  implementationClass="com.otl.sdk.language.OtlFindUsagesProvider"/>
         <colorSettingsPage implementation="com.otl.sdk.language.OtlColorSettingsPage"/>
         <psi.referenceContributor language="OTLanguage"
-                                  implementation="com.otl.sdk.language.util.OtlReferenceContributor"/>
+                                  implementation="com.otl.sdk.language.util.reference.OtlReferenceContributor"/>
         <annotator language="OTLanguage"
                    implementationClass="com.otl.sdk.language.annotator.OtlAnnotator"/>
         <navbar implementation="com.otl.sdk.language.OtlStructureAwareNavbar"/>
+        <lang.refactoringSupport
+            language="OTLanguage"
+            implementationClass="com.otl.sdk.language.view.OtlRefactoringSupportProvider"/>
+<!--        <codeInsight.lineMarkerProvider language="OTLanguage"-->
+<!--                                        implementationClass="com.otl.sdk.language.OtlLineMarkerProvider"/>-->
     </extensions>
 </idea-plugin>

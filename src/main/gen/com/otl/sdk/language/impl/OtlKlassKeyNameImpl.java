@@ -14,26 +14,20 @@ import com.otl.sdk.language.util.utils.OtlPsiUtil;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiReference;
 
-public class OtlKlassNameImpl extends OtlNamedElementImpl implements OtlKlassName {
+public class OtlKlassKeyNameImpl extends OtlNamedElementImpl implements OtlKlassKeyName {
 
-  public OtlKlassNameImpl(@NotNull ASTNode node) {
+  public OtlKlassKeyNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull OtlVisitor visitor) {
-    visitor.visitKlassName(this);
+    visitor.visitKlassKeyName(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof OtlVisitor) accept((OtlVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getKlassIdentifier() {
-    return findNotNullChildByType(KLASS_IDENTIFIER);
   }
 
   @Override

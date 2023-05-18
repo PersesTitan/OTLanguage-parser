@@ -6,8 +6,11 @@ public interface OtlToken {
     Set<Character> BLANKS = Set.of(' ', '\t', '\f');
 
     char PARAM_S = '[';
+    String IMPORT = "ㅇㅍㅇ";
+
     String KLASS = "ㅋㅅㅋ";
     String METHOD = "ㅁㅅㅁ";
+    String STATIC_METHOD = "ㅁㅆㅁ";
 
     Set<String> ORIGIN_TYPE = Set.of(
             "ㅇㅈㅇ", "ㅇㅉㅇ", "ㅇㅂㅇ", "ㅇㅁㅇ", "ㅇㄱㅇ", "ㅇㅅㅇ", "ㅇㅆㅇ",

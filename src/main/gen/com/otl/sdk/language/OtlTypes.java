@@ -15,7 +15,9 @@ public interface OtlTypes {
   IElementType DEFINE_METHOD = new OtlElementType("DEFINE_METHOD");
   IElementType DEFINE_PARAMS = new OtlElementType("DEFINE_PARAMS");
   IElementType IMPORT = new OtlElementType("IMPORT");
+  IElementType KLASS_KEY_NAME = new OtlElementType("KLASS_KEY_NAME");
   IElementType KLASS_NAME = new OtlElementType("KLASS_NAME");
+  IElementType METHOD_KEY_NAME = new OtlElementType("METHOD_KEY_NAME");
   IElementType METHOD_NAME = new OtlElementType("METHOD_NAME");
   IElementType REMARK_TOKEN = new OtlElementType("REMARK_TOKEN");
   IElementType UPDATE_VARIABLE = new OtlElementType("UPDATE_VARIABLE");
@@ -25,6 +27,7 @@ public interface OtlTypes {
   IElementType ADD = new OtlTokenType("ㅇ+ㅇ");
   IElementType BOOL = new OtlTokenType("BOOL");
   IElementType CHAR = new OtlTokenType("CHAR");
+  IElementType CRLF = new OtlTokenType("CRLF");
   IElementType DIV = new OtlTokenType("ㅇ/ㅇ");
   IElementType DOUBLE = new OtlTokenType("DOUBLE");
   IElementType EQ = new OtlTokenType("ㅇ=ㅇ");
@@ -33,7 +36,6 @@ public interface OtlTypes {
   IElementType GE = new OtlTokenType("ㅇ>=ㅇ");
   IElementType GT = new OtlTokenType("ㅇ>ㅇ");
   IElementType IF = new OtlTokenType("?ㅅ?");
-  IElementType IMPORT_KEY = new OtlTokenType("IMPORT_KEY");
   IElementType INT = new OtlTokenType("INT");
   IElementType KLASS_IDENTIFIER = new OtlTokenType("KLASS_IDENTIFIER");
   IElementType KLASS_KEY = new OtlTokenType("KLASS_KEY");
@@ -84,8 +86,14 @@ public interface OtlTypes {
       else if (type == IMPORT) {
         return new OtlImportImpl(node);
       }
+      else if (type == KLASS_KEY_NAME) {
+        return new OtlKlassKeyNameImpl(node);
+      }
       else if (type == KLASS_NAME) {
         return new OtlKlassNameImpl(node);
+      }
+      else if (type == METHOD_KEY_NAME) {
+        return new OtlMethodKeyNameImpl(node);
       }
       else if (type == METHOD_NAME) {
         return new OtlMethodNameImpl(node);

@@ -8,10 +8,7 @@ import com.otl.sdk.language.element.OtlNamedElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiReference;
 
-public interface OtlKlassName extends OtlNamedElement {
-
-  @NotNull
-  PsiElement getKlassIdentifier();
+public interface OtlKlassKeyName extends OtlNamedElement {
 
   String getKey();
 
