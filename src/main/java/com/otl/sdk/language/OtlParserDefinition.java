@@ -23,33 +23,39 @@ public class OtlParserDefinition implements ParserDefinition {
         return new OtlLexerAdapter();
     }
 
+    @NotNull
     @Override
-    public @NotNull PsiParser createParser(Project project) {
+    public PsiParser createParser(Project project) {
         return new OtlParser();
     }
 
+    @NotNull
     @Override
-    public @NotNull IFileElementType getFileNodeType() {
+    public IFileElementType getFileNodeType() {
         return FILE;
     }
 
+    @NotNull
     @Override
-    public @NotNull TokenSet getCommentTokens() {
+    public TokenSet getCommentTokens() {
         return OtlTokenSets.REMARK;
     }
 
+    @NotNull
     @Override
-    public @NotNull TokenSet getStringLiteralElements() {
+    public TokenSet getStringLiteralElements() {
         return TokenSet.EMPTY;
     }
 
+    @NotNull
     @Override
-    public @NotNull PsiElement createElement(ASTNode node) {
+    public PsiElement createElement(ASTNode node) {
         return OtlTypes.Factory.createElement(node);
     }
 
+    @NotNull
     @Override
-    public @NotNull PsiFile createFile(@NotNull FileViewProvider viewProvider) {
+    public PsiFile createFile(@NotNull FileViewProvider viewProvider) {
         return new OtlFile(viewProvider);
     }
 }

@@ -9,12 +9,8 @@ import com.otl.sdk.language.psi.OtlDefineParams;
 import com.otl.sdk.language.psi.OtlFile;
 
 public class OtlElementFactory {
-    public static OtlDefineKlass createKlass(Project project, String name) {
-        return (OtlDefineKlass) createFile(project, name).getFirstChild();
-    }
-
-    public static OtlDefineParams createKlassName(Project project, String name) {
-        return (OtlDefineParams) createFile(project, name).getFirstChild();
+    public static <T> T create(Project project, String name) {
+        return (T) createFile(project, name).getFirstChild();
     }
 
     public static OtlFile createFile(Project project, String text) {

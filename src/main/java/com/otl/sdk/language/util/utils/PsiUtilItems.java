@@ -6,11 +6,14 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.tree.IElementType;
 import com.otl.sdk.language.element.OtlElementFactory;
-import org.jetbrains.annotations.Contract;
+import com.otl.sdk.language.psi.OtlKlassKey;
+import com.otl.sdk.language.util.OtlDefineKlassUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Arrays;
+import java.util.List;
 
 class PsiUtilItems<T extends PsiElement> {
     private final IElementType type;
@@ -26,10 +29,10 @@ class PsiUtilItems<T extends PsiElement> {
 
     public PsiElement setName(T element, String newName) {
         ASTNode node = element.getNode().findChildByType(type);
-        if (node != null) {
-            T t = (T) OtlElementFactory.createFile(element.getProject(), newName).getFirstChild();
-            element.getNode().replaceChild(node, t.getFirstChild().getNode());
-        }
+        if (node != null) element.getNode().replaceChild(node, OtlElementFactory
+                    .<T>create(element.getProject(), newName)
+                    .getFirstChild()
+                    .getNode());
         return element;
     }
 
@@ -61,13 +64,17 @@ class PsiUtilItems<T extends PsiElement> {
         };
     }
 
-    PsiReference getReference(T item) {
+    public PsiReference getReference(T item) {
         PsiReference[] references = getReferences(item);
         return references.length == 0 ? null : references[0];
     }
 
     @NotNull
-    PsiReference[] getReferences(T item) {
+    public PsiReference[] getReferences(T item) {
         return ReferenceProvidersRegistry.getReferencesFromProviders(item);
+    }
+
+    public PsiReference findReferenceAt(T item, int offset) {
+        return getReferences(item)[offset];
     }
 }

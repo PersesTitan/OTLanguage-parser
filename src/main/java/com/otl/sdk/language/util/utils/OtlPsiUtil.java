@@ -11,86 +11,40 @@ import com.otl.sdk.language.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 public class OtlPsiUtil {
-    private static final PsiUtilItems<OtlDefineKlass> defineKlass = new PsiUtilItems<>(OtlTypes.KLASS_KEY);
-    private static final PsiUtilItems<OtlDefineMethod> defineMethod = new PsiUtilItems<>(OtlTypes.METHOD_KEY);
-    private static final PsiUtilItems<OtlKlassName> klassName = new PsiUtilItems<>(OtlTypes.KLASS_IDENTIFIER);
-    private static final PsiUtilItems<OtlKlassKeyName> klassKeyName = new PsiUtilItems<>(OtlTypes.KLASS_KEY);
-    private static final PsiUtilItems<OtlMethodKeyName> methodKeyName = new PsiUtilItems<>(OtlTypes.METHOD_KEY);
+    private static final PsiUtilItems<OtlKlassKey> klassKey = new PsiUtilItems<>(OtlTypes.KLASS_IDENTIFIER);
+    private static final PsiUtilItems<OtlMethodKey> methodKey = new PsiUtilItems<>(OtlTypes.METHOD_IDENTIFIER);
+    private static final PsiUtilItems<OtlVariableKey> variableKey = new PsiUtilItems<>(OtlTypes.VARIABLE_IDENTIFIER);
 
-    public static String getKey(OtlDefineKlass item) {
-        return defineKlass.getKey(item);
-    }
-    public static PsiElement setName(OtlDefineKlass element, String newName) {return defineKlass.setName(element, newName);}
-    public static PsiElement getNameIdentifier(OtlDefineKlass item) {
-        return defineKlass.getNameIdentifier(item);
-    }
-    public static ItemPresentation getPresentation(OtlDefineKlass item) {
-        return defineKlass.getPresentation(item);
-    }
-    public static String getName(OtlDefineKlass item) {
-        return getKey(item);
-    }
+    // CLASS DEFINE
+    public static String getKey(OtlKlassKey item) {return klassKey.getKey(item);}
+    public static PsiElement setName(OtlKlassKey item, @NotNull String name) {return klassKey.setName(item, name);}
+    public static PsiElement getNameIdentifier(OtlKlassKey item) {return klassKey.getNameIdentifier(item);}
+    public static ItemPresentation getPresentation(OtlKlassKey item) {return klassKey.getPresentation(item);}
+    public static String getName(OtlKlassKey item) {return getKey(item);}
+    public static Object getValue(OtlKlassKey item) {return null;}
+    public static PsiReference getReference(OtlKlassKey item) {return klassKey.getReference(item);}
+    public static PsiReference @NotNull [] getReferences(OtlKlassKey item) {return klassKey.getReferences(item);}
+    public static PsiReference findReferenceAt(OtlKlassKey item, int offset) {return klassKey.findReferenceAt(item, offset);}
 
-    // define method name
-    public static String getKey(OtlDefineMethod item) {
-        return defineMethod.getKey(item);
-    }
-    public static PsiElement setName(OtlDefineMethod item, String name) {
-        return defineMethod.setName(item, name);
-    }
-    public static PsiElement getNameIdentifier(OtlDefineMethod item) {
-        return defineMethod.getNameIdentifier(item);
-    }
-    public static ItemPresentation getPresentation(OtlDefineMethod item) {
-        return defineMethod.getPresentation(item);
-    }
-    public static String getName(OtlDefineMethod item) {
-        return getKey(item);
-    }
+    // METHOD DEFINE
+    public static String getKey(OtlMethodKey item) {return methodKey.getKey(item);}
+    public static PsiElement setName(OtlMethodKey item, @NotNull String name) {return methodKey.setName(item, name);}
+    public static PsiElement getNameIdentifier(OtlMethodKey item) {return methodKey.getNameIdentifier(item);}
+    public static ItemPresentation getPresentation(OtlMethodKey item) {return methodKey.getPresentation(item);}
+    public static String getName(OtlMethodKey item) {return getKey(item);}
+    public static Object getValue(OtlMethodKey item) {return null;}
+    public static PsiReference getReference(OtlMethodKey item) {return methodKey.getReference(item);}
+    public static PsiReference @NotNull [] getReferences(OtlMethodKey item) {return methodKey.getReferences(item);}
+    public static PsiReference findReferenceAt(OtlMethodKey item, int offset) {return methodKey.findReferenceAt(item, offset);}
 
-    // get klass name
-    public static String getKey(OtlKlassName item) {
-        return klassName.getKey(item);
-    }
-    public static PsiElement setName(OtlKlassName item, String newName) {
-        return klassName.setName(item, newName);
-    }
-    public static PsiElement getNameIdentifier(OtlKlassName item) {
-        return klassName.getNameIdentifier(item);
-    }
-    public static ItemPresentation getPresentation(OtlKlassName item) {
-        return klassName.getPresentation(item);
-    }
-    public static String getName(OtlKlassName item) {return getKey(item);}
-    public static PsiReference getReference(OtlKlassName item) {return klassName.getReference(item);}
-    public static PsiReference @NotNull [] getReferences(OtlKlassName item) {return klassName.getReferences(item);}
-
-//    public static PsiReference[] getReferences(OtlKlassName item, PsiReferenceService.@NotNull Hints hints) {
-//        return ReferenceProvidersRegistry.getReferencesFromProviders(item, hints);
-//    }
-//
-//    public static PsiReference @NotNull [] getReferences(OtlKlassName item) {
-//        return getReferences(item, PsiReferenceService.Hints.NO_HINTS);
-//    }
-//
-//    public static PsiReference getReference(OtlKlassName item) {
-//        PsiReference[] references = getReferences(item);
-//        return references.length == 0 ? null : references[0];
-//    }
-
-    // get klass name
-    public static String getKey(OtlKlassKeyName item) {return klassKeyName.getKey(item);}
-    public static PsiElement setName(OtlKlassKeyName item, String newName) {return klassKeyName.setName(item, newName);}
-    public static PsiElement getNameIdentifier(OtlKlassKeyName item) {return klassKeyName.getNameIdentifier(item);}
-    public static ItemPresentation getPresentation(OtlKlassKeyName item) {return klassKeyName.getPresentation(item);}
-    public static String getName(OtlKlassKeyName item) {return getKey(item);}
-    public static PsiReference getReference(OtlKlassKeyName item) {return klassKeyName.getReference(item);}
-    public static PsiReference @NotNull [] getReferences(OtlKlassKeyName item) {return klassKeyName.getReferences(item);}
-
-    // get method name
-    public static String getKey(OtlMethodKeyName item) {return methodKeyName.getKey(item);}
-    public static PsiElement setName(OtlMethodKeyName item, String newName) {return methodKeyName.setName(item, newName);}
-    public static PsiElement getNameIdentifier(OtlMethodKeyName item) {return methodKeyName.getNameIdentifier(item);}
-    public static ItemPresentation getPresentation(OtlMethodKeyName item) {return methodKeyName.getPresentation(item);}
-    public static String getName(OtlMethodKeyName item) {return getKey(item);}
+    // VARIABLE DEFINE
+    public static String getKey(OtlVariableKey item) {return variableKey.getKey(item);}
+    public static PsiElement setName(OtlVariableKey item, @NotNull String name) {return variableKey.setName(item, name);}
+    public static PsiElement getNameIdentifier(OtlVariableKey item) {return variableKey.getNameIdentifier(item);}
+    public static ItemPresentation getPresentation(OtlVariableKey item) {return variableKey.getPresentation(item);}
+    public static String getName(OtlVariableKey item) {return getKey(item);}
+    public static Object getValue(OtlVariableKey item) {return null;}
+    public static PsiReference getReference(OtlVariableKey item) {return variableKey.getReference(item);}
+    public static PsiReference @NotNull [] getReferences(OtlVariableKey item) {return variableKey.getReferences(item);}
+    public static PsiReference findReferenceAt(OtlVariableKey item, int offset) {return variableKey.findReferenceAt(item, offset);}
 }

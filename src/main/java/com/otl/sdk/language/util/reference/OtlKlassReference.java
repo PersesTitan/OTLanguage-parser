@@ -5,9 +5,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.otl.sdk.language.psi.OtlDefineKlass;
-import com.otl.sdk.language.psi.OtlKlassKeyName;
-import com.otl.sdk.language.psi.OtlKlassName;
+import com.otl.sdk.language.psi.OtlKlassKey;
 import com.otl.sdk.language.util.OtlDefineKlassUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,16 +23,12 @@ public class OtlKlassReference extends PsiReferenceBase<PsiElement> implements P
     @Override
     public ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
         Project project = myElement.getProject();
-        List<OtlKlassName> list = OtlDefineKlassUtil.findChild(OtlKlassName.class, project, key);
+        List<OtlKlassKey> list = OtlDefineKlassUtil.findChild(OtlKlassKey.class, project, key);
         System.out.println(list);
         int size = list.size();
         ResolveResult[] results = new ResolveResult[size];
         for (int i = 0; i<size; i++) results[i] = new PsiElementResolveResult(list.get(i));
         return results;
-//        return OtlDefineKlassUtil.findChild(OtlKlassName.class, project, key)
-//                .stream()
-//                .map(PsiElementResolveResult::new)
-//                .toArray(ResolveResult[]::new);
     }
 
     @Override
@@ -45,8 +39,7 @@ public class OtlKlassReference extends PsiReferenceBase<PsiElement> implements P
 
     @Override
     public Object @NotNull [] getVariants() {
-        System.out.println(OtlDefineKlassUtil.findChild(OtlKlassName.class, myElement.getProject(), key));
-        return OtlDefineKlassUtil.findChild(OtlKlassName.class, myElement.getProject(), key)
+        return OtlDefineKlassUtil.findChild(OtlKlassKey.class, myElement.getProject(), key)
                 .stream()
                 .filter(v -> v.getKey() != null && v.getKey().length() > 0)
                 .map(v -> (LookupElement) LookupElementBuilder

@@ -6,20 +6,20 @@ import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
-import com.otl.sdk.language.psi.OtlDefineKlass;
-import com.otl.sdk.language.psi.OtlKlassKeyName;
 import com.otl.sdk.language.psi.OtlTokenSets;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import otl.EditToken;
 
-public class OtlFindUsagesProvider implements FindUsagesProvider {
+public class OtlFindUsagesProvider implements FindUsagesProvider, EditToken {
     @Override
     public @Nullable WordsScanner getWordsScanner() {
         return new DefaultWordsScanner(new OtlLexerAdapter(),
-                OtlTokenSets.KLASS_KEY,
-                OtlTokenSets.REMARK,
+                OtlTokenSets.KLASS_IDENTIFIER,
+                OtlTokenSets.METHOD_IDENTIFIER,
+                OtlTokenSets.VARIABLE_IDENTIFIER,
                 TokenSet.EMPTY);
     }
 
@@ -35,20 +35,16 @@ public class OtlFindUsagesProvider implements FindUsagesProvider {
 
     @Override
     public @Nls @NotNull String getType(@NotNull PsiElement element) {
-        if (element instanceof OtlDefineKlass) return "OTLanguage define class";
-        return "";
+        return EditToken.super.getType(element);
     }
 
     @Override
     public @Nls @NotNull String getDescriptiveName(@NotNull PsiElement element) {
-//        if (element instanceof OtlDefineKlass item) return item.getKey();
-        if (element instanceof OtlKlassKeyName item) return item.getKey();
-        return "";
+        return getName(element);
     }
 
     @Override
     public @Nls @NotNull String getNodeText(@NotNull PsiElement element, boolean useFullName) {
-        if (element instanceof OtlDefineKlass item) return item.getText();
-        return "";
+        return getText(element);
     }
 }

@@ -23,7 +23,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.java</depends>
+    <depends>com.intellij.modules.lang</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
@@ -48,7 +48,9 @@
                                   implementation="com.otl.sdk.language.util.reference.OtlReferenceContributor"/>
         <annotator language="OTLanguage"
                    implementationClass="com.otl.sdk.language.annotator.OtlAnnotator"/>
-        <navbar implementation="com.otl.sdk.language.OtlStructureAwareNavbar"/>
+
+        <lang.psiStructureViewFactory language="OTLanguage" implementationClass="com.otl.sdk.language.root.OtlStructureViewFactory" />
+        <navbar implementation="com.otl.sdk.language.root.OtlStructureAwareNavbar"/>
         <lang.refactoringSupport
             language="OTLanguage"
             implementationClass="com.otl.sdk.language.view.OtlRefactoringSupportProvider"/>

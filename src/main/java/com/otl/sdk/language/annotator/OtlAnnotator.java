@@ -1,6 +1,5 @@
 package com.otl.sdk.language.annotator;
 
-import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
@@ -16,34 +15,33 @@ public class OtlAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         Project project = element.getProject();
-        if (element instanceof OtlKlassKeyName item) {
+        if (element instanceof OtlKlassKey item) {
             TextRange textRange = item.getTextRange();
-            if (OtlDefineKlassUtil.isDefineKlass(project, item.getKey())) {
-                holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                        .textAttributes(DefaultLanguageHighlighterColors.KEYWORD)
-                        .range(textRange)
-                        .create();
-            } else {
-                holder.newAnnotation(HighlightSeverity.ERROR, item.getKey() + " is already defined class name")
-                        .range(textRange)
-                        .create();
-            }
+            if (OtlDefineKlassUtil.isDefineKlass(project, item.getKey())) addHolder(holder, textRange);
+            else addHolder(holder, item.getKey() + " is already defined class name", textRange);
         } else if (element instanceof OtlDefineParams items) {
-            for (OtlKlassName item : items.getKlassNameList()) checkKlass(holder, project, item);
-        } else if (element instanceof OtlCreateVariable items) {
-            for (OtlKlassName item : items.getKlassNameList()) checkKlass(holder, project, item);
-        }
+            for (OtlKlassKey item : items.getKlassKeyList()) checkKlass(holder, project, item);
+        } else if (element instanceof OtlCreateVariable items) checkKlass(holder, project, items.getKlassKey());
     }
 
-    private void checkKlass(AnnotationHolder holder, Project project, OtlKlassName item) {
+
+    private void checkKlass(AnnotationHolder holder, Project project, OtlKlassKey item) {
         TextRange textRange = item.getTextRange();
-        if (OtlDefineKlassUtil.isKlass(project, item.getKey()))
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                    .textAttributes(DefaultLanguageHighlighterColors.KEYWORD)
-                    .range(textRange)
-                    .create();
-        else holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved type")
-                    .range(textRange)
-                    .create();
+        if (OtlDefineKlassUtil.isDefineKlass(project, item.getKey()))
+            addHolder(holder, textRange);
+        else addHolder(holder, "Unresolved type", textRange);
+    }
+
+    private void addHolder(AnnotationHolder holder, TextRange textRange) {
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                .textAttributes(DefaultLanguageHighlighterColors.KEYWORD)
+                .range(textRange)
+                .create();
+    }
+
+    private void addHolder(AnnotationHolder holder, String message, TextRange textRange) {
+        holder.newAnnotation(HighlightSeverity.ERROR, message)
+                .range(textRange)
+                .create();
     }
 }
