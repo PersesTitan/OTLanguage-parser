@@ -106,15 +106,15 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\2\0\1\1\6\0\2\2\1\3\1\4\5\2\1\5"+
+    "\2\0\1\1\13\0\2\2\1\3\1\4\5\2\1\5"+
     "\1\1\1\2\1\6\1\3\1\4\1\7\3\2\1\7"+
-    "\3\2\1\10\1\11\1\12\4\0\1\13\3\0\1\14"+
+    "\3\2\1\10\1\11\1\12\11\0\1\13\3\0\1\14"+
     "\1\6\1\14\1\0\1\15\1\16\1\17\1\0\1\20"+
-    "\1\21\1\0\1\22\1\16\4\0\1\23\1\24\1\25"+
+    "\1\21\1\0\1\22\1\16\5\0\1\23\1\24\1\25"+
     "\1\26";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[64];
+    int [] result = new int[75];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -142,14 +142,16 @@ class OtlLexer implements FlexLexer {
     "\0\0\0\21\0\42\0\63\0\104\0\125\0\146\0\167"+
     "\0\210\0\231\0\252\0\273\0\314\0\335\0\356\0\377"+
     "\0\u0110\0\u0121\0\u0132\0\u0143\0\u0154\0\u0165\0\u0176\0\u0187"+
-    "\0\u0154\0\u0198\0\u01a9\0\u01ba\0\231\0\u01cb\0\u01dc\0\u01ed"+
-    "\0\231\0\231\0\231\0\252\0\u01fe\0\u020f\0\356\0\231"+
-    "\0\u0220\0\u0231\0\u0242\0\231\0\u0253\0\314\0\u0264\0\231"+
-    "\0\231\0\u0275\0\u01cb\0\u0286\0\u0297\0\u01dc\0\231\0\u02a8"+
-    "\0\u02b9\0\u02ca\0\u02db\0\u02ec\0\231\0\u02fd\0\u030e\0\u031f";
+    "\0\u0198\0\u01a9\0\u01ba\0\u01cb\0\u01dc\0\u01a9\0\u01ed\0\u01fe"+
+    "\0\u020f\0\356\0\u0220\0\u0231\0\u0242\0\356\0\356\0\356"+
+    "\0\u0253\0\u0264\0\273\0\314\0\335\0\377\0\u0275\0\u0286"+
+    "\0\u0143\0\356\0\u0297\0\u02a8\0\u02b9\0\356\0\u02ca\0\u0121"+
+    "\0\u02db\0\356\0\356\0\u02ec\0\u0220\0\u02fd\0\u030e\0\u0231"+
+    "\0\356\0\u031f\0\u0330\0\u0341\0\u0352\0\u0363\0\u0374\0\356"+
+    "\0\u0385\0\u0396\0\u03a7";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[64];
+    int [] result = new int[75];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -172,48 +174,53 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\12\1\13\1\14\1\15\1\12\1\16\1\17\4\12"+
-    "\1\20\2\17\1\21\1\22\1\17\1\12\1\23\1\14"+
-    "\1\15\15\12\1\24\1\3\1\14\16\24\1\12\1\13"+
-    "\1\14\1\15\15\12\1\25\1\26\1\27\1\30\1\25"+
-    "\1\31\1\32\1\33\1\34\2\25\6\32\1\12\1\13"+
-    "\1\14\1\15\1\12\1\35\14\12\1\36\1\14\1\15"+
-    "\2\12\1\37\1\40\1\41\1\42\1\12\6\37\1\12"+
-    "\1\13\1\14\1\15\1\12\1\16\1\17\3\12\1\43"+
-    "\1\20\2\17\1\21\2\17\1\12\1\13\1\14\1\15"+
-    "\1\12\1\16\1\17\3\12\1\43\3\17\1\21\2\17"+
-    "\22\0\1\44\1\14\17\0\2\14\16\0\2\15\1\0"+
-    "\16\15\6\0\1\45\4\0\6\45\1\0\1\46\2\0"+
-    "\1\47\1\50\1\47\4\0\6\47\1\0\1\46\2\0"+
-    "\1\47\1\50\1\47\4\0\1\47\2\51\3\47\1\0"+
-    "\1\46\2\0\1\47\1\50\1\47\4\0\5\47\1\52"+
-    "\1\0\1\46\2\0\1\47\1\50\1\47\4\0\1\47"+
-    "\1\53\4\47\1\0\1\23\1\14\16\0\2\24\1\0"+
-    "\16\24\10\0\1\54\11\0\1\55\1\14\5\0\1\54"+
-    "\11\0\2\14\5\0\1\54\10\0\2\15\1\0\5\15"+
-    "\1\56\10\15\4\0\1\57\1\60\1\57\1\0\1\54"+
-    "\2\0\6\57\10\61\1\54\10\61\6\0\1\62\4\0"+
-    "\6\62\1\0\1\63\1\14\3\0\1\64\2\0\1\42"+
-    "\1\0\6\64\1\0\1\65\2\0\1\66\1\0\1\66"+
-    "\1\67\1\60\2\0\6\66\6\0\1\70\1\0\1\61"+
-    "\2\0\6\70\4\0\1\45\1\50\1\45\4\0\6\45"+
-    "\1\0\1\46\4\0\1\71\4\0\6\71\1\0\1\46"+
-    "\2\0\1\47\1\50\1\47\4\0\1\72\5\47\1\0"+
-    "\1\46\2\0\1\47\1\50\1\47\4\0\3\47\1\73"+
-    "\2\47\1\0\1\46\2\0\1\47\1\50\1\47\4\0"+
-    "\4\47\1\74\1\47\1\0\1\55\1\14\22\0\1\57"+
-    "\1\60\1\57\4\0\6\57\4\0\1\62\1\0\1\62"+
-    "\4\0\6\62\4\0\1\64\1\0\1\64\4\0\6\64"+
-    "\1\0\1\65\23\0\1\70\1\0\1\70\4\0\6\70"+
-    "\4\0\1\71\1\75\1\71\4\0\6\71\1\0\1\76"+
-    "\2\0\1\47\1\50\1\47\4\0\6\47\1\0\1\77"+
-    "\2\0\1\47\1\50\1\47\4\0\6\47\1\0\1\100"+
-    "\2\0\1\47\1\50\1\47\4\0\6\47\1\0\1\76"+
-    "\4\0\1\71\4\0\6\71\1\0\1\77\4\0\1\71"+
-    "\4\0\6\71\1\0\1\100\4\0\1\71\4\0\6\71";
+    "\1\17\1\20\1\21\1\22\1\17\1\23\1\24\4\17"+
+    "\1\25\2\24\1\26\1\27\1\24\1\17\1\30\1\21"+
+    "\1\22\15\17\1\31\1\3\1\21\16\31\1\17\1\20"+
+    "\1\21\1\22\15\17\1\32\1\33\1\34\1\35\1\32"+
+    "\1\36\1\37\1\40\1\41\2\32\6\37\1\17\1\20"+
+    "\1\21\1\22\1\17\1\42\14\17\1\43\1\21\1\22"+
+    "\2\17\1\44\1\45\1\46\1\47\1\17\6\44\1\17"+
+    "\1\20\1\21\1\22\1\17\1\23\1\24\3\17\1\50"+
+    "\1\25\2\24\1\26\2\24\1\17\1\20\1\21\1\22"+
+    "\1\17\1\23\1\24\3\17\1\50\3\24\1\26\2\24"+
+    "\6\0\1\51\4\0\6\51\5\0\1\52\14\0\1\53"+
+    "\23\0\1\15\1\0\1\54\4\0\6\54\1\0\1\55"+
+    "\41\0\1\56\1\21\17\0\2\21\16\0\2\22\1\0"+
+    "\16\22\6\0\1\57\4\0\6\57\1\0\1\60\2\0"+
+    "\1\61\1\62\1\61\4\0\6\61\1\0\1\60\2\0"+
+    "\1\61\1\62\1\61\4\0\1\61\2\63\3\61\1\0"+
+    "\1\60\2\0\1\61\1\62\1\61\4\0\5\61\1\64"+
+    "\1\0\1\60\2\0\1\61\1\62\1\61\4\0\1\61"+
+    "\1\65\4\61\1\0\1\30\1\21\16\0\2\31\1\0"+
+    "\16\31\10\0\1\66\11\0\1\67\1\21\5\0\1\66"+
+    "\11\0\2\21\5\0\1\66\10\0\2\22\1\0\5\22"+
+    "\1\70\10\22\4\0\1\71\1\72\1\71\1\0\1\66"+
+    "\2\0\6\71\10\73\1\66\10\73\6\0\1\74\4\0"+
+    "\6\74\1\0\1\75\1\21\3\0\1\76\2\0\1\47"+
+    "\1\0\6\76\1\0\1\77\2\0\1\100\1\0\1\100"+
+    "\1\101\1\72\2\0\6\100\6\0\1\102\1\0\1\73"+
+    "\2\0\6\102\4\0\1\51\1\0\1\51\4\0\6\51"+
+    "\4\0\1\52\1\0\1\103\4\0\6\103\4\0\1\57"+
+    "\1\62\1\57\4\0\6\57\1\0\1\60\4\0\1\104"+
+    "\4\0\6\104\1\0\1\60\2\0\1\61\1\62\1\61"+
+    "\4\0\1\105\5\61\1\0\1\60\2\0\1\61\1\62"+
+    "\1\61\4\0\3\61\1\106\2\61\1\0\1\60\2\0"+
+    "\1\61\1\62\1\61\4\0\4\61\1\107\1\61\1\0"+
+    "\1\67\1\21\22\0\1\71\1\72\1\71\4\0\6\71"+
+    "\4\0\1\74\1\0\1\74\4\0\6\74\4\0\1\76"+
+    "\1\0\1\76\4\0\6\76\1\0\1\77\23\0\1\102"+
+    "\1\0\1\102\4\0\6\102\1\0\1\55\2\0\1\52"+
+    "\1\0\1\103\4\0\6\103\4\0\1\104\1\110\1\104"+
+    "\4\0\6\104\1\0\1\111\2\0\1\61\1\62\1\61"+
+    "\4\0\6\61\1\0\1\112\2\0\1\61\1\62\1\61"+
+    "\4\0\6\61\1\0\1\113\2\0\1\61\1\62\1\61"+
+    "\4\0\6\61\1\0\1\111\4\0\1\104\4\0\6\104"+
+    "\1\0\1\112\4\0\1\104\4\0\6\104\1\0\1\113"+
+    "\4\0\1\104\4\0\6\104";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[816];
+    int [] result = new int[952];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -251,12 +258,13 @@ class OtlLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\2\0\1\1\6\0\1\11\22\1\1\11\3\1\3\11"+
-    "\4\0\1\11\3\0\1\11\2\1\1\0\2\11\1\1"+
-    "\1\0\2\1\1\0\1\11\1\1\4\0\1\11\3\1";
+    "\2\0\1\1\13\0\1\11\22\1\1\11\3\1\3\11"+
+    "\1\1\1\0\3\1\4\0\1\11\3\0\1\11\2\1"+
+    "\1\0\2\11\1\1\1\0\2\1\1\0\1\11\1\1"+
+    "\5\0\1\11\3\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[64];
+    int [] result = new int[75];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -302,6 +310,9 @@ class OtlLexer implements FlexLexer {
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
+
+  /** For the backwards DFA of general lookahead statements */
+  private boolean [] zzFin = new boolean [Math.min(ZZ_BUFFERSIZE, zzMaxBufferLen())+1];
 
   /** Number of newlines encountered up to the start of the matched text. */
   private int yyline;
@@ -687,62 +698,176 @@ class OtlLexer implements FlexLexer {
           // fall through
           case 32: break;
           case 11:
-            { yypushback(1); yybegin(OtlLexer.UPDATE_VARIABLE); return OtlTypes.VARIABLE_IDENTIFIER;
+            // lookahead expression with fixed lookahead length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzMarkedPos, -1);
+            { yybegin(OtlLexer.UPDATE_VARIABLE); return OtlTypes.VARIABLE_IDENTIFIER;
             }
           // fall through
           case 33: break;
           case 12:
-            { yypushback(2); return OtlTypes.VALUE;
+            // lookahead expression with fixed base length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzStartRead, 1);
+            { return OtlTypes.VALUE;
             }
           // fall through
           case 34: break;
           case 13:
-            { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER;
+            // lookahead expression with fixed lookahead length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzMarkedPos, -1);
+            { return OtlTypes.VARIABLE_IDENTIFIER;
             }
           // fall through
           case 35: break;
           case 14:
-            { yypushback(yylength()-1); return OtlTypes.PARAM_S;
+            // lookahead expression with fixed base length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzStartRead, 1);
+            { return OtlTypes.PARAM_S;
             }
           // fall through
           case 36: break;
           case 15:
-            { yypushback(yylength()-1); return OtlTypes.PARAM_E;
+            // lookahead expression with fixed base length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzStartRead, 1);
+            { return OtlTypes.PARAM_E;
             }
           // fall through
           case 37: break;
           case 16:
-            { yypushback(OtlFlex.max(this)); return TokenType.WHITE_SPACE;
+            // general lookahead, find correct zzMarkedPos
+            { int zzFState = 11;
+              int zzFPos = zzStartRead;
+              if (zzFin.length <= zzBufferL.length()) {
+                zzFin = new boolean[zzBufferL.length()+1];
+              }
+              boolean zzFinL[] = zzFin;
+              while (zzFState != -1 && zzFPos < zzMarkedPos) {
+                zzFinL[zzFPos] = ((zzAttrL[zzFState] & 1) == 1);
+                zzInput = Character.codePointAt(zzBufferL, zzFPos);
+                zzFPos += Character.charCount(zzInput);
+                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMap(zzInput) ];
+              }
+              if (zzFState != -1) {
+                zzFinL[zzFPos++] = ((zzAttrL[zzFState] & 1) == 1);
+              }
+              while (zzFPos <= zzMarkedPos) {
+                zzFinL[zzFPos++] = false;
+              }
+
+              zzFState = 12;
+              zzFPos = zzMarkedPos;
+              while (!zzFinL[zzFPos] || (zzAttrL[zzFState] & 1) != 1) {
+                zzInput = Character.codePointBefore(zzBufferL, zzFPos);
+                zzFPos -= Character.charCount(zzInput);
+                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMap(zzInput) ];
+              };
+              zzMarkedPos = zzFPos;
+            }
+            { return TokenType.WHITE_SPACE;
             }
           // fall through
           case 38: break;
           case 17:
-            { yypushback(OtlFlex.min(this)); return OtlTypes.KLASS_IDENTIFIER;
+            // general lookahead, find correct zzMarkedPos
+            { int zzFState = 9;
+              int zzFPos = zzStartRead;
+              if (zzFin.length <= zzBufferL.length()) {
+                zzFin = new boolean[zzBufferL.length()+1];
+              }
+              boolean zzFinL[] = zzFin;
+              while (zzFState != -1 && zzFPos < zzMarkedPos) {
+                zzFinL[zzFPos] = ((zzAttrL[zzFState] & 1) == 1);
+                zzInput = Character.codePointAt(zzBufferL, zzFPos);
+                zzFPos += Character.charCount(zzInput);
+                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMap(zzInput) ];
+              }
+              if (zzFState != -1) {
+                zzFinL[zzFPos++] = ((zzAttrL[zzFState] & 1) == 1);
+              }
+              while (zzFPos <= zzMarkedPos) {
+                zzFinL[zzFPos++] = false;
+              }
+
+              zzFState = 13;
+              zzFPos = zzMarkedPos;
+              while (!zzFinL[zzFPos] || (zzAttrL[zzFState] & 1) != 1) {
+                zzInput = Character.codePointBefore(zzBufferL, zzFPos);
+                zzFPos -= Character.charCount(zzInput);
+                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMap(zzInput) ];
+              };
+              zzMarkedPos = zzFPos;
+            }
+            { return OtlTypes.KLASS_IDENTIFIER;
             }
           // fall through
           case 39: break;
           case 18:
-            { yypushback(1); return OtlFlex.tokenKM(this);
+            // lookahead expression with fixed lookahead length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzMarkedPos, -1);
+            { return OtlFlex.tokenKM(this);
             }
           // fall through
           case 40: break;
           case 19:
-            { yypushback(OtlFlex.min(this)); yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER;
+            // general lookahead, find correct zzMarkedPos
+            { int zzFState = 9;
+              int zzFPos = zzStartRead;
+              if (zzFin.length <= zzBufferL.length()) {
+                zzFin = new boolean[zzBufferL.length()+1];
+              }
+              boolean zzFinL[] = zzFin;
+              while (zzFState != -1 && zzFPos < zzMarkedPos) {
+                zzFinL[zzFPos] = ((zzAttrL[zzFState] & 1) == 1);
+                zzInput = Character.codePointAt(zzBufferL, zzFPos);
+                zzFPos += Character.charCount(zzInput);
+                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMap(zzInput) ];
+              }
+              if (zzFState != -1) {
+                zzFinL[zzFPos++] = ((zzAttrL[zzFState] & 1) == 1);
+              }
+              while (zzFPos <= zzMarkedPos) {
+                zzFinL[zzFPos++] = false;
+              }
+
+              zzFState = 10;
+              zzFPos = zzMarkedPos;
+              while (!zzFinL[zzFPos] || (zzAttrL[zzFState] & 1) != 1) {
+                zzInput = Character.codePointBefore(zzBufferL, zzFPos);
+                zzFPos -= Character.charCount(zzInput);
+                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMap(zzInput) ];
+              };
+              zzMarkedPos = zzFPos;
+            }
+            { yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER;
             }
           // fall through
           case 41: break;
           case 20:
-            { yypushback(OtlFlex.min(this)); state.add(METHOD_LOOP); return OtlFlex.checkType(this);
+            // lookahead expression with fixed base length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzStartRead, 3);
+            { state.add(METHOD_LOOP); return OtlFlex.checkType(this);
             }
           // fall through
           case 42: break;
           case 21:
-            { yypushback(OtlFlex.min(this)); return OtlFlex.checkType(this);
+            // lookahead expression with fixed base length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzStartRead, 3);
+            { return OtlFlex.checkType(this);
             }
           // fall through
           case 43: break;
           case 22:
-            { yypushback(OtlFlex.min(this)); state.add(KLASS_LOOP); return OtlFlex.checkType(this);
+            // lookahead expression with fixed base length
+            zzMarkedPos = Character.offsetByCodePoints
+                (zzBufferL, zzStartRead, 3);
+            { state.add(KLASS_LOOP); return OtlFlex.checkType(this);
             }
           // fall through
           case 44: break;

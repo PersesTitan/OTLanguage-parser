@@ -57,40 +57,40 @@ PARAM_E="]"
 <KLASS_LOOP, METHOD_LOOP>   {LOOP_E}            { state.pop(); yybegin(pop()); return OtlTypes.LOOP_E; }
 
 <YYINITIAL, KLASS_LOOP, METHOD_LOOP> {
-    {IMPORT}{WHITE_SPACE}+
-        { yypushback(OtlFlex.min(this)); return OtlFlex.checkType(this); }
-    {KLASS_IDENTIFIER}{WHITE_SPACE}+{VARIABLE_IDENTIFIER}":"
-        { yypushback(OtlFlex.min(this)); yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER; }
-    ":"?{VARIABLE_IDENTIFIER}":"
-        { yypushback(1); yybegin(OtlLexer.UPDATE_VARIABLE); return OtlTypes.VARIABLE_IDENTIFIER; }
+    {IMPORT} / {WHITE_SPACE}+
+        { return OtlFlex.checkType(this); }
+    {KLASS_IDENTIFIER} / {WHITE_SPACE}+{VARIABLE_IDENTIFIER}":"
+        { yybegin(CREATE_VARIABLE); return OtlTypes.KLASS_IDENTIFIER; }
+    ":"?{VARIABLE_IDENTIFIER} / ":"
+        { yybegin(OtlLexer.UPDATE_VARIABLE); return OtlTypes.VARIABLE_IDENTIFIER; }
 }
 
-<YYINITIAL, KLASS_LOOP>({METHOD}|{STATIC}){WHITE_SPACE}+
-    { yypushback(OtlFlex.min(this)); state.add(METHOD_LOOP); return OtlFlex.checkType(this); }
-<YYINITIAL>{KLASS}{WHITE_SPACE}+
-    { yypushback(OtlFlex.min(this)); state.add(KLASS_LOOP); return OtlFlex.checkType(this); }
+<YYINITIAL, KLASS_LOOP>({METHOD}|{STATIC}) / {WHITE_SPACE}+
+    { state.add(METHOD_LOOP); return OtlFlex.checkType(this); }
+<YYINITIAL>{KLASS} / {WHITE_SPACE}+
+    { state.add(KLASS_LOOP); return OtlFlex.checkType(this); }
 
 <IMPORT>                            {WHITE_SPACE}+     { yybegin(VALUE); return TokenType.WHITE_SPACE; }
 <CREATE_VARIABLE, UPDATE_VARIABLE>  ":"                { yybegin(VALUE); return OtlTypes.VAR_TOKEN; }
 <CREATE_VARIABLE> {
-    {WHITE_SPACE}+                  { return TokenType.WHITE_SPACE; }
-    {PARAM_S}{PARAM_VALUE}          { yypushback(yylength()-1); return OtlTypes.PARAM_S; }
-    {PARAM_VALUE}{PARAM_E}          { yypushback(2); return OtlTypes.VALUE; }
-    {PARAM_E}{VARIABLE_IDENTIFIER}  { yypushback(yylength()-1); return OtlTypes.PARAM_E; }
-    {VARIABLE_IDENTIFIER}":"        { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
+    {WHITE_SPACE}+                     { return TokenType.WHITE_SPACE; }
+    {PARAM_S} / {PARAM_VALUE}          { return OtlTypes.PARAM_S; }
+    {PARAM_VALUE} / {PARAM_E}          { return OtlTypes.VALUE; }
+    {PARAM_E} / {VARIABLE_IDENTIFIER}  { return OtlTypes.PARAM_E; }
+    {VARIABLE_IDENTIFIER} / ":"        { return OtlTypes.VARIABLE_IDENTIFIER; }
 }
 
 <IS_METHOD, IS_KLASS> {
-    {WHITE_SPACE}+({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER})
-        { yypushback(OtlFlex.max(this)); return TokenType.WHITE_SPACE; }
-    ({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER}){PARAM_S}
-        { yypushback(1); return OtlFlex.tokenKM(this); }
-    {PARAM_S}({KLASS_IDENTIFIER}|{PARAM_E})
-        { yypushback(yylength()-1); return OtlTypes.PARAM_S; }
-    {KLASS_IDENTIFIER}{WHITE_SPACE}+
-        { yypushback(OtlFlex.min(this)); return OtlTypes.KLASS_IDENTIFIER; }
-    {VARIABLE_IDENTIFIER}{PARAM_E}
-        { yypushback(1); return OtlTypes.VARIABLE_IDENTIFIER; }
+    {WHITE_SPACE}+ / ({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER})
+        { return TokenType.WHITE_SPACE; }
+    ({KLASS_IDENTIFIER}|{METHOD_IDENTIFIER}) / {PARAM_S}
+        { return OtlFlex.tokenKM(this); }
+    {PARAM_S} / ({KLASS_IDENTIFIER}|{PARAM_E})
+        { return OtlTypes.PARAM_S; }
+    {KLASS_IDENTIFIER} / {WHITE_SPACE}+
+        { return OtlTypes.KLASS_IDENTIFIER; }
+    {VARIABLE_IDENTIFIER} / {PARAM_E}
+        { return OtlTypes.VARIABLE_IDENTIFIER; }
     {PARAM_E}
         { return OtlTypes.PARAM_E; }
     {WHITE_SPACE}*{LOOP_S}

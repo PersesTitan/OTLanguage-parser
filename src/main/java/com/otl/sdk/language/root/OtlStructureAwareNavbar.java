@@ -20,7 +20,7 @@ public class OtlStructureAwareNavbar extends StructureAwareNavBarModelExtension 
     @Override
     public @Nullable String getPresentableText(Object object) {
         if (object instanceof OtlFile item) return item.getName();
-        else if (object instanceof OtlKlassKey item) return item.getKey();
+        else if (object instanceof OtlKlassKey item) return item.getName();
         return null;
     }
 

@@ -18,7 +18,7 @@ public class OtlLineMarkerProvider extends RelatedItemLineMarkerProvider {
                                             @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
         Project project = element.getProject();
         if (element instanceof OtlKlassKey okn) {
-            List<OtlKlassKey> names = OtlDefineKlassUtil.findKlassName(project, okn.getKey());
+            List<OtlKlassKey> names = OtlDefineKlassUtil.findKlassName(project, okn.getName());
             if (names.size() > 0) {
                 result.add(
                         NavigationGutterIconBuilder

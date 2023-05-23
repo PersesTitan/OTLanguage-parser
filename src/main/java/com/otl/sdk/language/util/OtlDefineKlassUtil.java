@@ -29,7 +29,7 @@ public class OtlDefineKlassUtil extends OtlUtilFind {
             if (PsiManager.getInstance(project).findFile(vf) instanceof OtlFile otlFile) {
                 for (T t : PsiTreeUtil.getChildrenOfTypeAsList(otlFile, klass)) {
                     if (t.getChildren()[0] instanceof OtlNamedElement one
-                            && key.equals(one.getName()) && count++ > 1) return false;
+                            && key.equals(one.getText()) && count++ > 1) return false;
                 }
             }
         }

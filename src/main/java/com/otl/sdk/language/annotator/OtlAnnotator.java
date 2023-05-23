@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.otl.sdk.language.psi.*;
 import com.otl.sdk.language.util.OtlDefineKlassUtil;
 import org.jetbrains.annotations.NotNull;
@@ -17,17 +18,17 @@ public class OtlAnnotator implements Annotator {
         Project project = element.getProject();
         if (element instanceof OtlKlassKey item) {
             TextRange textRange = item.getTextRange();
-            if (OtlDefineKlassUtil.isDefineKlass(project, item.getKey())) addHolder(holder, textRange);
-            else addHolder(holder, item.getKey() + " is already defined class name", textRange);
-        } else if (element instanceof OtlDefineParams items) {
-            for (OtlKlassKey item : items.getKlassKeyList()) checkKlass(holder, project, item);
-        } else if (element instanceof OtlCreateVariable items) checkKlass(holder, project, items.getKlassKey());
+            if (OtlDefineKlassUtil.isDefineKlass(project, item.getText())) addHolder(holder, textRange);
+            else addHolder(holder, item.getText() + " is already defined class name", textRange);
+        }
+//        else if (element instanceof OtlDefineParams items) {
+//            for (OtlVariableKey item : items.getVariableKeyList()) checkKlass(holder, project, item);
+//        } else if (element instanceof OtlCreateVariable items) checkKlass(holder, project, items.getKlassKey());
     }
-
 
     private void checkKlass(AnnotationHolder holder, Project project, OtlKlassKey item) {
         TextRange textRange = item.getTextRange();
-        if (OtlDefineKlassUtil.isDefineKlass(project, item.getKey()))
+        if (OtlDefineKlassUtil.isDefineKlass(project, item.getName()))
             addHolder(holder, textRange);
         else addHolder(holder, "Unresolved type", textRange);
     }

@@ -66,6 +66,15 @@
 
     implements("KLASS_KEY|METHOD_KEY|VARIABLE_KEY")="com.otl.sdk.language.element.OtlNamedElement"
     mixin("KLASS_KEY|METHOD_KEY|VARIABLE_KEY")="com.otl.sdk.language.element.OtlNamedElementImpl"
+    methods("KLASS_KEY|METHOD_KEY|VARIABLE_KEY")=[
+        getName
+        getNameIdentifier
+        setName
+        getPresentation
+        getReference
+        getReferences
+        findReferenceAt
+    ]
 }
 
 OtlFile ::= LINES_ITEM*
@@ -89,80 +98,12 @@ DEFINE_METHOD ::= (ㅁㅅㅁ|ㅁㅆㅁ) METHOD_KEY DEFINE_PARAMS '{' LINES* '}' 
 DEFINE_PARAMS ::= '[]' | ('[' KLASS_KEY VARIABLE_KEY ']')+
 
 VALUE_KEY ::= VALUE | INT_VALUE | LONG_VALUE | FLOAT_VALUE | DOUBLE_VALUE | BOOL_VALUE | USE
-KLASS_KEY ::= KLASS_IDENTIFIER { pin=1 methods=[getKey getName getValue setName getNameIdentifier getPresentation getReference getReferences findReferenceAt] }
-METHOD_KEY ::= METHOD_IDENTIFIER  { pin=1 methods=[getKey getName getValue setName getNameIdentifier getPresentation getReference getReferences findReferenceAt] }
-VARIABLE_KEY ::= VARIABLE_IDENTIFIER  { pin=1 methods=[getKey getName getValue setName getNameIdentifier getPresentation getReference getReferences findReferenceAt] }
+KLASS_KEY ::= KLASS_IDENTIFIER { pin=1 }
+METHOD_KEY ::= METHOD_IDENTIFIER
+VARIABLE_KEY ::= VARIABLE_IDENTIFIER
 
 private INT_VALUE ::= "regexp:[-+]?\d{1,10}"
 private LONG_VALUE ::= "regexp:[-+]?\d{1,19}"
 private FLOAT_VALUE ::= "regexp:[-+]?(\d+\.\d{1,7})"
 private DOUBLE_VALUE ::= "regexp:[-+]?(\d+\.\d{1,16})"
 private BOOL_VALUE ::= 'ㅇㅇ'|'ㄴㄴ'
-
-//OtlFile ::= FILE_LINES*
-//
-//private FILE_LINES ::= (LINES|DEFINE_KLASS|DEFINE_METHOD)
-//private LINES ::= (REMARK_TOKEN|IMPORT|UPDATE_VARIABLE|CREATE_VARIABLE|CRLF)
-//
-//REMARK_TOKEN ::= '#' "regexp:[^\n\r]*" { pin=1 }
-//CREATE_VARIABLE ::= KLASS_NAME ('[' INT ']')? VARIABLE_NAME ':' VALUE_KEY
-//// 변수명:변경할 값
-//UPDATE_VARIABLE ::= USE_VARIABLE ':' VALUE_KEY { pin=2 }
-//DEFINE_METHOD ::= (ㅁㅅㅁ|ㅁㅆㅁ) METHOD_KEY_NAME DEFINE_PARAMS '{' LINES* '}' ('=>' KLASS_NAME ':' value)? {
-//    pin=1
-//    mixin="com.otl.sdk.language.element.OtlNamedElementImpl"
-//    implements="com.otl.sdk.language.element.OtlNamedElement"
-//    methods=[getKey getName setName getNameIdentifier getPresentation]
-//}
-//DEFINE_KLASS ::= ㅋㅅㅋ KLASS_KEY_NAME DEFINE_PARAMS '{' (LINES|DEFINE_METHOD CRLF)* '}' { pin=1 }
-//
-//IMPORT ::= ㅇㅍㅇ VALUE_KEY { pin=1 }
-//DEFINE_PARAMS ::= '[]' | ('[' KLASS_NAME VARIABLE_NAME ']')+
-//
-//private param ::= ('[' value ']')+ | value
-//private value ::= USE_VARIABLE | USE_METHOD | INT | LONG | FLOAT | DOUBLE | BOOL | STRING | CHAR
-//
-//private INT ::= INT_VALUE (('ㅇ+ㅇ' | 'ㅇ-ㅇ' | 'ㅇ%ㅇ' | 'ㅇ*ㅇ' | 'ㅇ/ㅇ') INT_VALUE)*
-//private LONG ::= LONG_VALUE (('ㅇ+ㅇ' | 'ㅇ-ㅇ' | 'ㅇ%ㅇ' | 'ㅇ*ㅇ' | 'ㅇ/ㅇ') LONG_VALUE)*
-//private FLOAT ::= FLOAT_VALUE (('ㅇ+ㅇ' | 'ㅇ-ㅇ' | 'ㅇ%ㅇ' | 'ㅇ*ㅇ' | 'ㅇ/ㅇ') FLOAT_VALUE)*
-//private DOUBLE ::= DOUBLE_VALUE (('ㅇ+ㅇ' | 'ㅇ-ㅇ' | 'ㅇ%ㅇ' | 'ㅇ*ㅇ' | 'ㅇ/ㅇ') DOUBLE_VALUE)*
-//private BOOL ::= BOOL_VALUE ( ('ㄸ' | 'ㄲ') BOOL_VALUE)*
-//private STRING ::= STRING_VALUE
-//private CHAR ::= CHAR_VALUE
-//
-//private INT_VALUE ::= "regexp:[-+]?\d{1,10}" | USE_VARIABLE | USE_METHOD
-//private LONG_VALUE ::= "regexp:[-+]?\d{1,19}" | INT_VALUE | USE_VARIABLE | USE_METHOD
-//private FLOAT_VALUE ::= "regexp:[-+]?(\d+\.\d{1,7})" | LONG_VALUE | USE_VARIABLE | USE_METHOD
-//private DOUBLE_VALUE ::= "regexp:[-+]?(\d+\.\d{1,16})" | FLOAT_VALUE | USE_VARIABLE | USE_METHOD
-//private BOOL_VALUE ::= "regexp:ㅇㅇ|ㄴㄴ" | USE_VARIABLE | USE_METHOD | (NUMBERS ('ㅇ>ㅇ' | 'ㅇ<ㅇ' | 'ㅇ=ㅇ' | 'ㅇ!ㅇ' | 'ㅇ<=ㅇ' | 'ㅇ>=ㅇ') NUMBERS)
-//private STRING_VALUE ::= "regexp:\"[^]]*\"" | USE_VARIABLE | USE_METHOD
-//private CHAR_VALUE ::= "regexp:'.'" | USE_VARIABLE | USE_METHOD
-//
-//private NUMBERS ::= INT | LONG | FLOAT | DOUBLE
-//
-//private USE_METHOD ::= (USE_VARIABLE | METHOD_ITEM | KLASS_NAME) ('~' METHOD_ITEM)*
-//private USE_VARIABLE ::= ':'? '~'* VARIABLE_NAME
-//private METHOD_ITEM ::= METHOD_NAME param? // 메소드명[값1][값2]
-//
-//KLASS_KEY_NAME ::= KLASS_KEY {
-//    pin=1
-//    mixin="com.otl.sdk.language.element.OtlNamedElementImpl"
-//    implements="com.otl.sdk.language.element.OtlNamedElement"
-//    methods=[getKey getName setName getNameIdentifier getPresentation getReference getReferences]
-//}
-//
-//METHOD_KEY_NAME ::= METHOD_KEY {
-//    pin=1
-//    mixin="com.otl.sdk.language.element.OtlNamedElementImpl"
-//    implements="com.otl.sdk.language.element.OtlNamedElement"
-//    methods=[getKey getName setName getNameIdentifier getPresentation]
-//}
-//
-//VARIABLE_NAME ::= VARIABLE_IDENTIFIER
-//METHOD_NAME ::= METHOD_IDENTIFIER
-//KLASS_NAME ::= KLASS_IDENTIFIER {
-//    pin=1
-//    mixin="com.otl.sdk.language.element.OtlNamedElementImpl"
-//    implements="com.otl.sdk.language.element.OtlNamedElement"
-//    methods=[getKey getName setName getNameIdentifier getPresentation getReference getReferences]
-//}

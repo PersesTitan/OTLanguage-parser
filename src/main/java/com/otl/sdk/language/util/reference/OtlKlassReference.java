@@ -5,6 +5,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.otl.sdk.language.psi.OtlDefineKlass;
 import com.otl.sdk.language.psi.OtlKlassKey;
 import com.otl.sdk.language.util.OtlDefineKlassUtil;
 import org.jetbrains.annotations.NotNull;
@@ -33,15 +34,17 @@ public class OtlKlassReference extends PsiReferenceBase<PsiElement> implements P
 
     @Override
     public @Nullable PsiElement resolve() {
-        ResolveResult[] resolveResults = multiResolve(false);
-        return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+        Project project = myElement.getProject();
+        List<OtlDefineKlass> list = OtlDefineKlassUtil.findChild(OtlDefineKlass.class, project, key);
+        System.out.println(list);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
     public Object @NotNull [] getVariants() {
         return OtlDefineKlassUtil.findChild(OtlKlassKey.class, myElement.getProject(), key)
                 .stream()
-                .filter(v -> v.getKey() != null && v.getKey().length() > 0)
+                .filter(v -> v.getName() != null && v.getName().length() > 0)
                 .map(v -> (LookupElement) LookupElementBuilder
                         .create(v)
                         .withTypeText(v.getContainingFile().getName())

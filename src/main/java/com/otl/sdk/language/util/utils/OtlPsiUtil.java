@@ -1,10 +1,7 @@
 package com.otl.sdk.language.util.utils;
 
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceService;
-import com.intellij.psi.ReferenceProviderType;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.otl.sdk.language.OtlTypes;
 import com.otl.sdk.language.psi.*;

@@ -18,8 +18,6 @@ public class OtlColorSettingsPage implements ColorSettingsPage {
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
             new AttributesDescriptor("Class", OtlSyntaxHighlighterItem.ㅋㅅㅋ.key),
             new AttributesDescriptor("Method", OtlSyntaxHighlighterItem.ㅁㅅㅁ.key),
-//            new AttributesDescriptor("ClassName", OtlSyntaxHighlighterItem.KLASS_DEFINE.key),
-//            new AttributesDescriptor("MethodName", OtlSyntaxHighlighterItem.METHOD_DEFINE.key),
     };
 
     @Override

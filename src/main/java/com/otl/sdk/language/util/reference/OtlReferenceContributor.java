@@ -25,15 +25,5 @@ public class OtlReferenceContributor extends PsiReferenceContributor {
                         } else return PsiReference.EMPTY_ARRAY;
                     }
         });
-
-//        registrar.registerReferenceProvider(PlatformPatterns.psiElement(OtlKlassName.class), new PsiReferenceProvider() {
-//            @Override
-//            public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element,
-//                                                                   @NotNull ProcessingContext context) {
-//                OtlKlassName okn = (OtlKlassName) element;
-//                System.out.println(okn);
-//                return new PsiReference[0];
-//            }
-//        });
     }
 }

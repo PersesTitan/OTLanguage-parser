@@ -6,14 +6,11 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.tree.IElementType;
 import com.otl.sdk.language.element.OtlElementFactory;
-import com.otl.sdk.language.psi.OtlKlassKey;
-import com.otl.sdk.language.util.OtlDefineKlassUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
-import java.util.List;
 
 class PsiUtilItems<T extends PsiElement> {
     private final IElementType type;
